@@ -25,7 +25,7 @@ const UpdatePost = () => {
                     return;
                 }
 
-                const response = await axios.get(`https://riseuplabs-ecommerce-backend.onrender.com/posts/${id}`, {
+                const response = await axios.get(`http://localhost:5000/posts/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -55,7 +55,7 @@ const UpdatePost = () => {
         const updatedPost = { img, category, title, newPrice, oldPrice, color, size, description };
 
         try {
-            axios.post(`https://riseuplabs-ecommerce-backend.onrender.com/posts/update/${id}`, updatedPost)
+            axios.post(`http://localhost:5000/posts/update/${id}`, updatedPost)
             setSuccessfull(true);
             setTimeout(() => {
                 setSuccessfull(false)

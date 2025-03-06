@@ -14,7 +14,7 @@ const Dashboard = () => {
                 return;
             }
             try {
-                const response = await axios.get('https://riseuplabs-ecommerce-backend.onrender.com/dashboard', {
+                const response = await axios.get('http://localhost:5000/dashboard', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

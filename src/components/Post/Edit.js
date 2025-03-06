@@ -19,7 +19,7 @@ const Edit = () => {
                     return;
                 }
 
-                const response = await axios.get('https://riseuplabs-ecommerce-backend.onrender.com/edit', {
+                const response = await axios.get('http://localhost:5000/edit', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -38,7 +38,7 @@ const Edit = () => {
     }, []);
 
     useEffect(() => {
-        axios.get('https://riseuplabs-ecommerce-backend.onrender.com/posts/')
+        axios.get('http://localhost:5000/posts/')
             .then(response => {
                 setPosts(response.data.slice(0, 12));
                 setLoading(false);

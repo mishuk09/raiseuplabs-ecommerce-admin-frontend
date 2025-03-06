@@ -18,7 +18,7 @@ const DeletePost = () => {
                     return;
                 }
 
-                const response = await axios.get(`https://riseuplabs-ecommerce-backend.onrender.com/delete/${id}`, {
+                const response = await axios.get(`http://localhost:5000/delete/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -37,7 +37,7 @@ const DeletePost = () => {
     }, [id]);
 
     const handleDelete = () => {
-        axios.delete(`https://riseuplabs-ecommerce-backend.onrender.com/posts/${id}`)
+        axios.delete(`http://localhost:5000/posts/${id}`)
             .then(() => {
                 console.log('Post deleted.');
                 navigate('/delete');

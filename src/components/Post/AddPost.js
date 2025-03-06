@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import JoditEditor from 'jodit-react';
 import { useNavigate } from 'react-router';
 
 const AddPost = () => {
-    const [img, setImg] = useState('');
+    const [img, setImg] = useState(null);
     const [category, setCategory] = useState('');
     const [title, setTitle] = useState('');
     const [newPrice, setNewPrice] = useState('');
@@ -20,13 +20,12 @@ const AddPost = () => {
         const fetchData = async () => {
             try {
                 const token = localStorage.getItem('token');
-
                 if (!token) {
                     navigate('/signin');
                     return;
                 }
 
-                const response = await axios.get('https://riseuplabs-ecommerce-backend.onrender.com/addpost', {
+                const response = await axios.get('http://localhost:5000/addpost', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -41,67 +40,68 @@ const AddPost = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [navigate]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const newPost = { img, category, title, newPrice, oldPrice, color, size, description };
+        const formData = new FormData();
+        formData.append('image', img);
+        formData.append('category', category);
+        formData.append('title', title);
+        formData.append('newPrice', newPrice);
+        formData.append('oldPrice', oldPrice);
+        formData.append('color', JSON.stringify(color));
+        formData.append('size', JSON.stringify(size));
+        formData.append('description', description);
 
-        axios.post('https://riseuplabs-ecommerce-backend.onrender.com/posts/add', newPost)
-            .then(res => {
-                console.log(res.data);
-                // Reset fields
-                setImg('');
-                setCategory('');
-                setTitle('');
-                setNewPrice('');
-                setOldPrice('');
-                setColor([]);
-                setSize([]);
-                setDescription('');
-                // Set success message
-                setSuccessMessage(true);
-                setTimeout(() => {
-                    setSuccessMessage(false);
-                }, 3000);
-            })
-            .catch(err => console.log(err));
-    }
+        try {
+            const res = await axios.post('http://localhost:5000/posts/add', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            //reset feild
+            setImg('');
+            setCategory('');
+            setTitle('');
+            setNewPrice('');
+            setOldPrice('');
+            setColor([]);
+            setSize([]);
+            setDescription('');
+            
+            console.log(res.data);
+            setSuccessMessage(true);
+            setTimeout(() => setSuccessMessage(false), 3000);
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
-    const handleAddColor = () => {
-        setColor([...color, '']);
-    }
-
+    const handleAddColor = () => setColor([...color, '']);
     const handleColorChange = (index, value) => {
         const newColors = [...color];
         newColors[index] = value;
         setColor(newColors);
-    }
+    };
 
-    const handleAddSize = () => {
-        setSize([...size, '']);
-    }
-
+    const handleAddSize = () => setSize([...size, '']);
     const handleSizeChange = (index, value) => {
         const newSizes = [...size];
         newSizes[index] = value;
         setSize(newSizes);
-    }
+    };
 
     return (
         <div className="container mt-10 p-6 bg-white">
             <h2 className="text-2xl text-center font-semibold mb-6">Add New Product</h2>
 
-
-
-            <form onSubmit={handleSubmit} className="space-y-4  ">
-                <div className="  grid  lg:grid-cols-3 gap-2 lg:gap-4">
+            <form onSubmit={handleSubmit} className="space-y-4" method="POST" encType="multipart/form-data">
+                <div className="grid lg:grid-cols-3 gap-2 lg:gap-4">
                     <div>
-                        <label className="block  text-sm font-medium text-gray-700">Image URL</label>
+                        <label className="block text-sm font-medium text-gray-700">Image</label>
                         <input
-                            type="text"
-                            value={img}
-                            onChange={(e) => setImg(e.target.value)}
+                            type="file"
+                            name="image"
+                            onChange={(e) => setImg(e.target.files[0] || null)}
                             required
                             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                         />
@@ -153,7 +153,7 @@ const AddPost = () => {
                                 <input
                                     type="text"
                                     value={c}
-                                    onChange={e => handleColorChange(index, e.target.value)}
+                                    onChange={(e) => handleColorChange(index, e.target.value)}
                                     required
                                     className="block w-full p-2 border border-gray-300 rounded-md"
                                 />
@@ -174,7 +174,7 @@ const AddPost = () => {
                                 <input
                                     type="text"
                                     value={s}
-                                    onChange={e => handleSizeChange(index, e.target.value)}
+                                    onChange={(e) => handleSizeChange(index, e.target.value)}
                                     required
                                     className="block w-full p-2 border border-gray-300 rounded-md"
                                 />
@@ -197,12 +197,12 @@ const AddPost = () => {
                         value={description}
                         tabIndex={1}
                         onBlur={(newContent) => setDescription(newContent)}
-                        onChange={(newContent) => { }}
+                        onChange={(newContent) => setDescription(newContent)}
                     />
                 </div>
                 {successMessage && (
                     <div className="mb-4 p-4 text-green-800 bg-green-200 rounded">
-                        Add Successfull......
+                        Added Successfully!
                     </div>
                 )}
                 <button

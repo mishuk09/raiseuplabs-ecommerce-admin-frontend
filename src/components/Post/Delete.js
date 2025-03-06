@@ -15,7 +15,7 @@ const Delete = () => {
             navigate('/signin');
             return;
         }
-        axios.get('https://riseuplabs-ecommerce-backend.onrender.com/posts')
+        axios.get('http://localhost:5000/posts')
             .then(response => {
                 setPosts(response.data.slice(0, 12));
                 setLoading(false);
