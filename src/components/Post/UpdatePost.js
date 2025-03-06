@@ -13,7 +13,7 @@ const UpdatePost = () => {
     const [color, setColor] = useState([]);
     const [size, setSize] = useState([]);
     const [description, setDescription] = useState('');
-    const [successfull, setSuccessfull] = useState(false)
+    const [successfull, setSuccessfull] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -32,7 +32,7 @@ const UpdatePost = () => {
                 });
 
                 const post = response.data;
-                setImg(post.img);
+                setImg(post.img);  // Keep the existing image URL for the first load
                 setCategory(post.category);
                 setTitle(post.title);
                 setNewPrice(post.newPrice);
@@ -50,12 +50,39 @@ const UpdatePost = () => {
         fetchData();
     }, [id]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const updatedPost = { img, category, title, newPrice, oldPrice, color, size, description };
+
+        // Create FormData to handle file uploads
+        const formData = new FormData();
+        formData.append('category', category);
+        formData.append('title', title);
+        formData.append('newPrice', newPrice);
+        formData.append('oldPrice', oldPrice);
+        formData.append('color', JSON.stringify(color));
+        formData.append('size', JSON.stringify(size));
+        formData.append('description', description);
+
+        // Append image if it's updated (if it's a new image)
+        if (img && typeof img === 'object' && img instanceof File) {
+            formData.append('image', img);  // This will be the new image file
+        }
 
         try {
-            axios.post(`http://localhost:5000/posts/update/${id}`, updatedPost)
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('Token not found');
+                return;
+            }
+
+            // Send the request to update the post
+            const response = await axios.post(`http://localhost:5000/posts/update/${id}`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',  // Set the content type to multipart/form-data
+                }
+            });
+
             setSuccessfull(true);
             setTimeout(() => {
                 setSuccessfull(false)
@@ -63,44 +90,55 @@ const UpdatePost = () => {
         } catch (err) {
             console.log(err);
         }
-    }
+    };
 
     const handleAddColor = () => {
         setColor([...color, '']);
-    }
+    };
 
     const handleColorChange = (index, value) => {
         const newColors = [...color];
         newColors[index] = value;
         setColor(newColors);
-    }
+    };
 
     const handleAddSize = () => {
         setSize([...size, '']);
-    }
+    };
 
     const handleSizeChange = (index, value) => {
         const newSizes = [...size];
         newSizes[index] = value;
         setSize(newSizes);
-    }
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImg(file); // Set the image file for upload
+        }
+    };
 
     return (
         <div className="container mt-10 p-6 bg-white">
             <h2 className="text-2xl text-center font-semibold mb-6">Update Post</h2>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="  grid  lg:grid-cols-3 gap-2 lg:gap-4">
+            <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
+                <div className="grid lg:grid-cols-3 gap-2 lg:gap-4">
+
                     <div>
-                        <label className="block  text-sm font-medium text-gray-700">Image:</label>
+                        {img && typeof img === 'string' && (
+                            <div className="mt-2">
+                                <img src={img} alt="Current post image" className="w-32 h-32 object-cover" />
+                            </div>
+                        )}
+                        <label className="block text-sm font-medium text-gray-700">Image:</label>
                         <input
-                            type="url"
-                            value={img}
-                            onChange={e => setImg(e.target.value)}
-                            required
-                            placeholder="Enter image URL"
+                            type="file"
+                            onChange={handleImageChange}
                             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                         />
+
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Category:</label>
@@ -163,17 +201,19 @@ const UpdatePost = () => {
                         onChange={(newContent) => { }}
                     />
                 </div>
+
                 {successfull && (
                     <div className="mb-4 p-4 text-green-800 bg-green-200 rounded">
-                        Update Successfull......
+                        Update Successful!
                     </div>
                 )}
+
                 <button type="submit" className="mt-4 w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                     Update Post
                 </button>
             </form>
         </div>
     );
-}
+};
 
 export default UpdatePost;
