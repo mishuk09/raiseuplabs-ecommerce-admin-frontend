@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import JoditEditor from 'jodit-react';
+import Alert from '../Alert';
 
 const UpdatePost = () => {
     const { id } = useParams();
@@ -121,6 +122,7 @@ const UpdatePost = () => {
 
     return (
         <div className="container mt-10 p-6 bg-white">
+            <p>   <Link to='/edit'>Back</Link></p>
             <h2 className="text-2xl text-center font-semibold mb-6">Update Post</h2>
 
             <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
@@ -203,9 +205,7 @@ const UpdatePost = () => {
                 </div>
 
                 {successfull && (
-                    <div className="mb-4 p-4 text-green-800 bg-green-200 rounded">
-                        Update Successful!
-                    </div>
+                    <Alert name=' Update Successful!' />
                 )}
 
                 <button type="submit" className="mt-4 w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
