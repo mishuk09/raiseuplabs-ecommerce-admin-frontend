@@ -58,11 +58,11 @@ const Edit = () => {
                     <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {posts.map((product) => (
                         <Link
                             to={`/update/${product._id}`}
-                            key={product.id}
+                            key={product._id}
                             className="bg-white p-2 rounded-lg shadow-md flex items-center space-x-4"
                         >
                             {/* Left Section: Image */}
@@ -80,9 +80,9 @@ const Edit = () => {
                                 <div className="flex justify-between items-center mb-2 mt-2">
                                     {/* Price Section */}
                                     <div className="flex items-center space-x-2">
-                                        <span className="font-semibold text-sm text-red-500">रू {product.newPrice}</span>
+                                        <span className="font-semibold text-sm text-red-500">$ {product.newPrice}</span>
                                         <span className="text-sm font-semibold text-gray-700 line-through">
-                                            रू {product.oldPrice}
+                                            $ {product.oldPrice}
                                         </span>
                                     </div>
                                     {/* Discount Section */}

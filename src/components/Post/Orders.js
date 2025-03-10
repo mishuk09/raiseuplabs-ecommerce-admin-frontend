@@ -60,7 +60,7 @@ const Orders = () => {
 
     return (
         <div className="container mx-auto p-4">
-            <h1 className="text-3xl mt-10 font-bold text-center mb-8">Orders Management</h1>
+            <h1 className="text-3xl   font-bold text-center mb-8">Orders Management</h1>
             {loading ? (
                 <div className="flex justify-center items-center h-screen">
                     <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>

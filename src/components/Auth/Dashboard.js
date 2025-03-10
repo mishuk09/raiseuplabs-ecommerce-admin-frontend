@@ -36,8 +36,8 @@ const Dashboard = () => {
 
     return (
 
-        <div className="    flex flex-col   p-4">
-            <Link to='/dashboard'>home</Link>
+        <div className="       p-4">
+            <p className='font-medium text-xl'>All Product Dashboard</p>
             <main className="   py-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <Link to="/addpost" className="bg-white p-6 rounded-lg shadow hover:bg-gray-50 transition">
@@ -52,10 +52,7 @@ const Dashboard = () => {
                         <h2 className="text-xl font-bold mb-4">🗑️ Delete List</h2>
                         <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">❌ Delete List</button>
                     </Link>
-                    <Link to="/orders" className="bg-white p-6 rounded-lg shadow hover:bg-gray-50 transition">
-                        <h2 className="text-xl font-bold mb-4">🛒 Order</h2>
-                        <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">✅ Order</button>
-                    </Link>
+
                 </div>
             </main>
 

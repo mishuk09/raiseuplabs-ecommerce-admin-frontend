@@ -67,7 +67,7 @@ const AddPost = () => {
             setColor([]);
             setSize([]);
             setDescription('');
-            
+
             console.log(res.data);
             setSuccessMessage(true);
             setTimeout(() => setSuccessMessage(false), 3000);
@@ -91,7 +91,7 @@ const AddPost = () => {
     };
 
     return (
-        <div className="container mt-10 p-6 bg-white">
+        <div className="    p-6 bg-white">
             <h2 className="text-2xl text-center font-semibold mb-6">Add New Product</h2>
 
             <form onSubmit={handleSubmit} className="space-y-4" method="POST" encType="multipart/form-data">
