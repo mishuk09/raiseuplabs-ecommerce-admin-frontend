@@ -1,5 +1,5 @@
 // src/components/DeleteOffer.js
-import React, { useEffect } from 'react';
+import React from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaTrashAlt, FaRegTimesCircle } from 'react-icons/fa';
@@ -8,33 +8,6 @@ const DeleteOffer = () => {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const token = localStorage.getItem('token');
-
-                if (!token) {
-                    console.error('Token not found');
-                    return;
-                }
-
-                const response = await axios.get(`http://localhost:5000/delete/${id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                console.log(response.data); // log the response
-            } catch (error) {
-                console.error('Error fetching data:', error.response ? error.response.data : error.message);
-                // Check for 401 or 403 error status and redirect to sign-in page
-                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                    window.location.href = '/signin';
-                }
-            }
-        };
-        fetchData();
-    }, [id]);
 
     const handleDelete = () => {
         axios.delete(`http://localhost:5000/home/${id}`)

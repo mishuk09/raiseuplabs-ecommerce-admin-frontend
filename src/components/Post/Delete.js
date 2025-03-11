@@ -27,8 +27,9 @@ const Delete = () => {
     }, []);
 
     return (
-        <div className="container mx-auto px-4 lg:px-0">
-            <h1 className="text-2xl text-center mt-10 mb-10 font-bold">Select Item for Delete.</h1>
+        <div className="  px-4 lg:px-0">
+            <Link to='/dashboard'>Back</Link>
+            <h1 className="text-2xl text-center   mb-10 font-bold">Select Item for Delete.</h1>
             {loading ? (
                 <div className="flex justify-center items-center h-screen">
                     <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>

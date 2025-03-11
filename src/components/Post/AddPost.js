@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import JoditEditor from 'jodit-react';
-import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const AddPost = () => {
     const [img, setImg] = useState(null);
@@ -14,33 +14,8 @@ const AddPost = () => {
     const [description, setDescription] = useState('');
     const [successMessage, setSuccessMessage] = useState(false);
     const editor = useRef(null);
-    const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    navigate('/signin');
-                    return;
-                }
 
-                const response = await axios.get('http://localhost:5000/addpost', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                console.log(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error.response ? error.response.data : error.message);
-                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                    window.location.href = '/signin';
-                }
-            }
-        };
-        fetchData();
-    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -92,6 +67,7 @@ const AddPost = () => {
 
     return (
         <div className="    p-6 bg-white">
+            <Link to='/dashboard'>Back</Link>
             <h2 className="text-2xl text-center font-semibold mb-6">Add New Product</h2>
 
             <form onSubmit={handleSubmit} className="space-y-4" method="POST" encType="multipart/form-data">

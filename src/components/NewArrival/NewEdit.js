@@ -2,40 +2,11 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 
 const NewEdit = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const token = localStorage.getItem('token');
-
-                if (!token) {
-                    navigate('/signin');
-                    return;
-                }
-
-                const response = await axios.get('http://localhost:5000/edit', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                console.log(response.data); // log the response
-            } catch (error) {
-                console.error('Error fetching data:', error.response ? error.response.data : error.message);
-                // Check for 401 or 403 error status and redirect to sign-in page
-                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                    window.location.href = '/signin';
-                }
-            }
-        };
-        fetchData();
-    }, []);
+ 
 
     useEffect(() => {
         axios.get('http://localhost:5000/new')

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 const AddOffer = () => {
@@ -9,32 +8,6 @@ const AddOffer = () => {
     const [offer, setOffer] = useState("");
     const [img, setImg] = useState(null);
     const [successMessage, setSuccessMessage] = useState(false);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const token = localStorage.getItem("token");
-                if (!token) {
-                    navigate("/signin");
-                    return;
-                }
-
-                await axios.get("http://localhost:5000/home/add", {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-            } catch (error) {
-                console.error(
-                    "Error fetching data:",
-                    error.response ? error.response.data : error.message
-                );
-                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                    window.location.href = "/signin";
-                }
-            }
-        };
-        fetchData();
-    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
