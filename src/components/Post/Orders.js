@@ -38,7 +38,7 @@ const Orders = () => {
         };
 
         fetchOrders();
-    }, []);
+    }, [navigate]);
 
     const handleCompleteOrder = async (orderId) => {
         try {
