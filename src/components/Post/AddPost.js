@@ -25,8 +25,14 @@ const AddPost = () => {
         formData.append('title', title);
         formData.append('newPrice', newPrice);
         formData.append('oldPrice', oldPrice);
-        formData.append('color', JSON.stringify(color));
-        formData.append('size', JSON.stringify(size));
+
+        // Append color and size as individual fields
+        color.forEach(c => formData.append('color[]', c));
+        size.forEach(s => formData.append('size[]', s));
+
+        // formData.append('color', JSON.stringify(color));
+        // formData.append('size', JSON.stringify(size));
+
         formData.append('description', description);
 
         try {
@@ -52,6 +58,7 @@ const AddPost = () => {
     };
 
     const handleAddColor = () => setColor([...color, '']);
+
     const handleColorChange = (index, value) => {
         const newColors = [...color];
         newColors[index] = value;
@@ -59,6 +66,7 @@ const AddPost = () => {
     };
 
     const handleAddSize = () => setSize([...size, '']);
+
     const handleSizeChange = (index, value) => {
         const newSizes = [...size];
         newSizes[index] = value;

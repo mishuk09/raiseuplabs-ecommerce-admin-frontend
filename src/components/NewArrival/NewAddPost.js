@@ -24,8 +24,8 @@ const NewAddPost = () => {
         formData.append('title', title);
         formData.append('newPrice', newPrice);
         formData.append('oldPrice', oldPrice);
-        formData.append('color', JSON.stringify(color));
-        formData.append('size', JSON.stringify(size));
+        color.forEach(c => formData.append('color[]', c));
+        size.forEach(s => formData.append('size[]', s));
         formData.append('description', description);
 
         try {

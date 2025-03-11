@@ -60,8 +60,8 @@ const NewUpdatePost = () => {
         formData.append('title', title);
         formData.append('newPrice', newPrice);
         formData.append('oldPrice', oldPrice);
-        formData.append('color', JSON.stringify(color));
-        formData.append('size', JSON.stringify(size));
+        color.forEach(c => formData.append('color[]', c));
+        size.forEach(s => formData.append('size[]', s));
         formData.append('description', description);
 
         // Append image if it's updated (if it's a new image)
@@ -122,7 +122,7 @@ const NewUpdatePost = () => {
 
     return (
         <div className=" p-6 bg-white">
-             <Link to='/new'>Back</Link> 
+            <Link to='/new'>Back</Link>
             <h2 className="text-2xl text-center font-semibold mb-6">Update Post</h2>
 
             <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
