@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import * as XLSX from 'xlsx'; // Import SheetJS
+
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
@@ -58,9 +60,52 @@ const Orders = () => {
         }
     };
 
+
+
+    // ✅ Function to generate Excel file
+    const exportToExcel = () => {
+        if (orders.length === 0) {
+            alert('No orders to export!');
+            return;
+        }
+
+        // Format orders for Excel
+        const formattedOrders = orders.map((order) => ({
+            'Full Name': order.fullName,
+            'Email': order.email,
+            'Phone': order.phoneNumber,
+            'City': order.city,
+            'Address': order.address,
+            'Order Note': order.orderNote,
+            'Total Amount ($)': order.totalAmount,
+            'Items': order.cartItems.map(item =>
+                `Title: ${item.title}, Color: ${item.color}, Size: ${item.size}, Quantity: ${item.quantity}, Price: ${item.price}`
+            ).join('; ') // Join items into a single string
+        }));
+
+        // Create a worksheet
+        const ws = XLSX.utils.json_to_sheet(formattedOrders);
+
+        // Create a workbook
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Orders');
+
+        // Generate and download the Excel file
+        XLSX.writeFile(wb, 'Orders_Report.xlsx');
+    };
+
     return (
         <div className="container mx-auto p-4">
             <h1 className="text-3xl   font-bold text-center mb-8">Orders Management</h1>
+            {/*  Export Button */}
+            <div className="text-center flex justify-end mb-4">
+                <button
+                    onClick={exportToExcel}
+                    className="bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                    Download Excel
+                </button>
+            </div>
             {loading ? (
                 <div className="flex justify-center items-center h-screen">
                     <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
