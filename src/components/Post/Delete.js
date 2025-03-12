@@ -17,7 +17,7 @@ const Delete = () => {
         }
         axios.get('http://localhost:5000/posts')
             .then(response => {
-                setPosts(response.data.slice(0, 12));
+                setPosts(response.data);
                 setLoading(false);
             })
             .catch(error => {

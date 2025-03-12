@@ -95,7 +95,7 @@ const Orders = () => {
     };
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="  mx-auto p-4">
             <h1 className="text-3xl   font-bold text-center mb-8">Orders Management</h1>
             {/*  Export Button */}
             <div className="text-center flex justify-end mb-4">

@@ -22,7 +22,7 @@ const NewDeletePost = () => {
     }
 
     return (
-        <div className="container flex flex-col items-center justify-center h-[80vh]">
+        <div className="  flex flex-col items-center justify-center h-[80vh]">
             <div className="bg-white p-8 rounded-lg shadow-md text-center">
                 <h2 className="text-2xl font-semibold mb-4">Are you sure you want to delete this post?</h2>
                 <div className="flex justify-center">

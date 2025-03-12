@@ -72,15 +72,15 @@ const EditOffer = () => {
         <div className="    p-6 bg-white">
             <p><Link to='/offer'>Back</Link></p>
             <h2 className="text-2xl text-center font-semibold mb-6">Update Post</h2>
-
+            {img && typeof img === 'string' && (
+                <div className="mt-2">
+                    <img src={img} alt="Current post image" className="w-32 h-32 object-cover" />
+                </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
                 <div className="grid lg:grid-cols-3 gap-2 lg:gap-4">
                     <div>
-                        {img && typeof img === 'string' && (
-                            <div className="mt-2">
-                                <img src={img} alt="Current post image" className="w-32 h-32 object-cover" />
-                            </div>
-                        )}
+
                         <label className="block text-sm font-medium text-gray-700">Image:</label>
                         <input
                             type="file"
