@@ -4,7 +4,7 @@ import Dashboard from "../../components/Auth/Dashboard";
 import { useState } from "react";
 
 const sections = [
-    { id: 1, name: "Product's", icon: <LayoutDashboard />, path: "/dashboard", component: <Dashboard /> },
+    { id: 1, name: "Product's", icon: <LayoutDashboard />, path: "/", component: <Dashboard /> },
     { id: 2, name: "Home-Offer", icon: <House />, path: "/offer" },
     { id: 3, name: "New Arrival", icon: <CirclePlus />, path: "/new" },
     { id: 4, name: "Category", icon: <ChartColumnStacked />, path: "/cate" },

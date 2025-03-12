@@ -2,8 +2,9 @@ import { Route, Routes } from 'react-router';
 import SignIn from './components/Auth/SignIn';
 import SignUp from './components/Auth/SignUp';
 import Layout from './pages/Home/Layout';
+import ProtectedRoute from './components/utills/ProtectedRoute';
 
-// Import all other components...
+// Import other components...
 import Dashboard from './components/Auth/Dashboard';
 import AddPost from './components/Post/AddPost';
 import UpdatePost from './components/Post/UpdatePost';
@@ -29,22 +30,19 @@ import CatUpdatePost from './components/Category/CatUpdatePost';
 import CatDeletePost from './components/Category/CatDeletePost';
 import CatEdit from './components/Category/CatEdit';
 import CatDelete from './components/Category/CatDelete';
-import ProtectedRoute from './components/utills/ProtectedRoute';
 
 function App() {
   return (
     <div className="App">
       <Routes>
+        {/* Public Routes */}
         <Route path='/signin' element={<SignIn />} />
         <Route path='/signup' element={<SignUp />} />
 
-        {/* Public Route */}
-        <Route element={<Layout />}>
-          <Route path='/' element={<Layout />} />
-
-          {/* Protected Routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route path='/dashboard' element={<Dashboard />} />
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
+            <Route path='/' element={<Dashboard />} />
 
             {/* Offer section routes */}
             <Route path="/offer" element={<Offfer />} />

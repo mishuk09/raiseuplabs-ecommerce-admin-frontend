@@ -59,7 +59,7 @@ export default function SignIn() {
 
             setTimeout(() => {
                 setShowAlert(false);
-                window.location.href = '/dashboard'; // Redirect to dashboard or desired page
+                window.location.href = '/'; // Redirect to dashboard or desired page
             }, 500);
         } catch (error) {
             console.error('There was an error!', error);
