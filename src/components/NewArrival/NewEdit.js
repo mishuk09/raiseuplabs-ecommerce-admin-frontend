@@ -6,10 +6,10 @@ import { Link } from 'react-router-dom';
 const NewEdit = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
- 
+
 
     useEffect(() => {
-        axios.get('http://localhost:5000/new')
+        axios.get('https://riseuplabs-ecommerce-backend.onrender.com/new')
             .then(response => {
                 // setPosts(response.data.slice(0, 12));
                 setPosts(response.data);

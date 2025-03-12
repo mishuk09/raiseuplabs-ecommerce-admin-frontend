@@ -15,7 +15,7 @@ const EditOffer = () => {
         // Fetch existing post data
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/home/${id}`);
+                const response = await axios.get(`https://riseuplabs-ecommerce-backend.onrender.com/home/${id}`);
                 const data = response.data;
                 setsubTitle(data.subTitle);
                 setTitle(data.title);
@@ -47,7 +47,7 @@ const EditOffer = () => {
                 return;
             }
 
-            await axios.post(`http://localhost:5000/home/offupdate/${id}`, formData, {
+            await axios.post(`https://riseuplabs-ecommerce-backend.onrender.com/home/offupdate/${id}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',

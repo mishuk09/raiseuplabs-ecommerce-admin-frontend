@@ -30,7 +30,7 @@ const CatAddPost = () => {
         formData.append('description', description);
 
         try {
-            const res = await axios.post('http://localhost:5000/cate/add', formData, {
+            const res = await axios.post('https://riseuplabs-ecommerce-backend.onrender.com/cate/add', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             //reset feild

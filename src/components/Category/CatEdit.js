@@ -2,14 +2,14 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
- 
+
 const CatEdit = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    
+
     useEffect(() => {
-        axios.get('http://localhost:5000/cate')
+        axios.get('https://riseuplabs-ecommerce-backend.onrender.com/cate')
             .then(response => {
                 // setPosts(response.data.slice(0, 12));
                 setPosts(response.data);

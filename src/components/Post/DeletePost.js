@@ -11,7 +11,7 @@ const DeletePost = () => {
 
 
     const handleDelete = () => {
-        axios.delete(`http://localhost:5000/posts/${id}`)
+        axios.delete(`https://riseuplabs-ecommerce-backend.onrender.com/posts/${id}`)
             .then(() => {
                 console.log('Post deleted.');
                 navigate('/delete');
