@@ -19,7 +19,7 @@ const Orders = () => {
                     return;
                 }
 
-                const response = await axios.get('https://riseuplabs-ecommerce-backend.onrender.com/item/orders', {
+                const response = await axios.get('http://localhost:5000/item/orders', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -47,7 +47,7 @@ const Orders = () => {
                 throw new Error('Token not found');
             }
 
-            await axios.delete(`https://riseuplabs-ecommerce-backend.onrender.com/item/orders/${orderId}`, {
+            await axios.delete(`http://localhost:5000/item/orders/${orderId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

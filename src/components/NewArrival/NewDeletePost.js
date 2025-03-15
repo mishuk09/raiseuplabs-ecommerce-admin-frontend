@@ -9,7 +9,7 @@ const NewDeletePost = () => {
     const navigate = useNavigate();
 
     const handleDelete = () => {
-        axios.delete(`https://riseuplabs-ecommerce-backend.onrender.com/new/newdelete/${id}`)
+        axios.delete(`http://localhost:5000/new/newdelete/${id}`)
             .then(() => {
                 console.log('Post deleted.');
                 navigate('/newdelete');

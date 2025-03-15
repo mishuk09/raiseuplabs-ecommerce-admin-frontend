@@ -10,7 +10,7 @@ const SelectEdit = () => {
 
 
     useEffect(() => {
-        axios.get('https://riseuplabs-ecommerce-backend.onrender.com/home/offer')
+        axios.get('http://localhost:5000/home/offer')
             .then(response => {
                 // setPosts(response.data.slice(0, 12));
                 setPosts(response.data);

@@ -26,7 +26,7 @@ const NewUpdatePost = () => {
                     return;
                 }
 
-                const response = await axios.get(`https://riseuplabs-ecommerce-backend.onrender.com/new/${id}`, {
+                const response = await axios.get(`http://localhost:5000/new/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -77,7 +77,7 @@ const NewUpdatePost = () => {
             }
 
             // Send the request to update the post
-            const response = await axios.post(`https://riseuplabs-ecommerce-backend.onrender.com/new/newupdate/${id}`, formData, {
+            const response = await axios.post(`http://localhost:5000/new/newupdate/${id}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',  // Set the content type to multipart/form-data

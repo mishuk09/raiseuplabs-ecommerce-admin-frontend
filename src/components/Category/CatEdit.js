@@ -9,7 +9,7 @@ const CatEdit = () => {
 
 
     useEffect(() => {
-        axios.get('https://riseuplabs-ecommerce-backend.onrender.com/cate')
+        axios.get('http://localhost:5000/cate')
             .then(response => {
                 // setPosts(response.data.slice(0, 12));
                 setPosts(response.data);

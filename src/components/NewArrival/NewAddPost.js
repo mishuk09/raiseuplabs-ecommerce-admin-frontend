@@ -29,7 +29,7 @@ const NewAddPost = () => {
         formData.append('description', description);
 
         try {
-            const res = await axios.post('https://riseuplabs-ecommerce-backend.onrender.com/new/add', formData, {
+            const res = await axios.post('http://localhost:5000/new/add', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             //reset feild

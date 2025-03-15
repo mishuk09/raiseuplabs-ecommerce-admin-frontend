@@ -30,6 +30,7 @@ import CatUpdatePost from './components/Category/CatUpdatePost';
 import CatDeletePost from './components/Category/CatDeletePost';
 import CatEdit from './components/Category/CatEdit';
 import CatDelete from './components/Category/CatDelete';
+import Home from './components/Home/Home';
 
 function App() {
   return (
@@ -42,7 +43,9 @@ function App() {
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
-            <Route path='/' element={<Dashboard />} />
+
+            <Route path='/' element={<Home />} />
+            <Route path='/dashboadr' element={<Dashboard />} />
 
             {/* Offer section routes */}
             <Route path="/offer" element={<Offfer />} />

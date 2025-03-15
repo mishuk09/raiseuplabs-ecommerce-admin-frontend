@@ -10,7 +10,7 @@ const DeleteOffer = () => {
 
 
     const handleDelete = () => {
-        axios.delete(`https://riseuplabs-ecommerce-backend.onrender.com/home/${id}`)
+        axios.delete(`http://localhost:5000/home/${id}`)
             .then(() => {
                 console.log('Post deleted.');
                 navigate('/deleteoffer');

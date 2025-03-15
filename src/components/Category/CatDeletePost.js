@@ -10,7 +10,7 @@ const CatDeletePost = () => {
 
 
     const handleDelete = () => {
-        axios.delete(`https://riseuplabs-ecommerce-backend.onrender.com/cate/catedelete/${id}`)
+        axios.delete(`http://localhost:5000/cate/catedelete/${id}`)
             .then(() => {
                 console.log('Post deleted.');
                 navigate('/catedelete');

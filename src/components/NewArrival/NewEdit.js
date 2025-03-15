@@ -9,7 +9,7 @@ const NewEdit = () => {
 
 
     useEffect(() => {
-        axios.get('https://riseuplabs-ecommerce-backend.onrender.com/new')
+        axios.get('http://localhost:5000/new')
             .then(response => {
                 // setPosts(response.data.slice(0, 12));
                 setPosts(response.data);
