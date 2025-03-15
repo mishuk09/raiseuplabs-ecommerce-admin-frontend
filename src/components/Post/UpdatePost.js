@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
 import JoditEditor from 'jodit-react';
 import Alert from '../Alert';
+import { X } from 'lucide-react';
 
-const UpdatePost = () => {
-    const { id } = useParams();
+const UpdatePost = ({ id, onClose }) => {
+    // const { id } = useParams();
     const [img, setImg] = useState('');
     const [category, setCategory] = useState('');
     const [title, setTitle] = useState('');
     const [newPrice, setNewPrice] = useState('');
     const [oldPrice, setOldPrice] = useState('');
+    const [stock, setStock] = useState('');
     const [color, setColor] = useState([]);
     const [size, setSize] = useState([]);
     const [description, setDescription] = useState('');
@@ -38,6 +39,7 @@ const UpdatePost = () => {
                 setTitle(post.title);
                 setNewPrice(post.newPrice);
                 setOldPrice(post.oldPrice);
+                setStock(post.stock);
                 setColor(post.color || []);
                 setSize(post.size || []);
                 setDescription(post.description);
@@ -60,6 +62,7 @@ const UpdatePost = () => {
         formData.append('title', title);
         formData.append('newPrice', newPrice);
         formData.append('oldPrice', oldPrice);
+        formData.append('stock', stock);
         color.forEach(c => formData.append('color[]', c));
         size.forEach(s => formData.append('size[]', s));
         formData.append('description', description);
@@ -121,98 +124,112 @@ const UpdatePost = () => {
     };
 
     return (
-        <div className="   p-6 bg-white">
-            <p>   <Link to='/edit'>Back</Link></p>
-            <h2 className="text-2xl text-center font-semibold mb-6">Update Post</h2>
-            {img && typeof img === 'string' && (
-                <div className="mt-2 ">
-                    <img src={img} alt="Current post image" className="w-32 h-32 object-cover" />
-                </div>
-            )}
-            <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
-                <div className="grid lg:grid-cols-3 gap-2 lg:gap-4">
+        <>
+            <div
+                className="fixed inset-0 bg-slate-900   opacity-50"
+                onClick={onClose}
+            ></div>
+            <div className="fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="max-w-4xl 2xl:max-w-7xl max-h-[500px] 2xl:max-h-[600px] relative overflow-y-auto overflow-x-hidden h-auto bg-white p-4 rounded">
 
-                    <div>
+                    <button onClick={onClose} className='absolute top-2 right-3'><X size={18} /></button>
 
-                        <label className="block text-sm font-medium text-gray-700">Image:</label>
-                        <input
-                            type="file"
-                            onChange={handleImageChange}
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                        />
+                    <h2 className="text-2xl text-center font-semibold mb-6">Edit Item</h2>
+                    {img && typeof img === 'string' && (
+                        <div className="mt-2 absolute top-0 left-0">
+                            <img src={img} alt="Current post image" className="w-20 h-20 object-cover" />
+                        </div>
+                    )}
+                    <form onSubmit={handleSubmit} className="space-y-4 pt-6" encType="multipart/form-data">
+                        <div className="grid lg:grid-cols-3 gap-2 lg:gap-2">
 
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Category:</label>
-                        <input type="text" value={category} onChange={e => setCategory(e.target.value)} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Title:</label>
-                        <input type="text" value={title} onChange={e => setTitle(e.target.value)} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">New Price:</label>
-                        <input type="number" value={newPrice} onChange={e => setNewPrice(e.target.value)} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Old Price:</label>
-                        <input type="number" value={oldPrice} onChange={e => setOldPrice(e.target.value)} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Colors:</label>
-                        {color.map((c, index) => (
-                            <div key={index} className="flex space-x-2 mt-1">
+                            <div>
+
+                                <label className="block text-sm font-medium text-gray-700">Image:</label>
                                 <input
-                                    type="text"
-                                    value={c}
-                                    onChange={e => handleColorChange(index, e.target.value)}
-                                    required
-                                    className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                                    type="file"
+                                    onChange={handleImageChange}
+                                    className="mt-1 block w-full p-1 h-8 text-xs border border-gray-300 rounded"
                                 />
+
                             </div>
-                        ))}
-                        <button type="button" onClick={handleAddColor} className="mt-2 text-sm text-blue-600 hover:underline">
-                            Add Color
-                        </button>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Sizes:</label>
-                        {size.map((s, index) => (
-                            <div key={index} className="flex space-x-2 mt-1">
-                                <input
-                                    type="text"
-                                    value={s}
-                                    onChange={e => handleSizeChange(index, e.target.value)}
-                                    required
-                                    className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                                />
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Category:</label>
+                                <input type="text" value={category} onChange={e => setCategory(e.target.value)} required className="mt-1 block w-full p-1 h-8 text-xs border border-gray-300 rounded" />
                             </div>
-                        ))}
-                        <button type="button" onClick={handleAddSize} className="mt-2 text-sm text-blue-600 hover:underline">
-                            Add Size
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Title:</label>
+                                <input type="text" value={title} onChange={e => setTitle(e.target.value)} required className="mt-1 block w-full p-1 h-8 text-xs border border-gray-300 rounded" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">New Price:</label>
+                                <input type="number" value={newPrice} onChange={e => setNewPrice(e.target.value)} required className="mt-1 block w-full p-1 h-8 text-xs border border-gray-300 rounded" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Old Price:</label>
+                                <input type="number" value={oldPrice} onChange={e => setOldPrice(e.target.value)} required className="mt-1 block w-full p-1 h-8 text-xs border border-gray-300 rounded" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Stock:</label>
+                                <input type="number" value={stock} onChange={e => setStock(e.target.value)} required className="mt-1 block w-full p-1 h-8 text-xs border border-gray-300 rounded" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Colors:</label>
+                                {color.map((c, index) => (
+                                    <div key={index} className="flex space-x-2 mt-1">
+                                        <input
+                                            type="text"
+                                            value={c}
+                                            onChange={e => handleColorChange(index, e.target.value)}
+                                            required
+                                            className="mt-1 block w-full p-1 h-8 text-xs border border-gray-300 rounded"
+                                        />
+                                    </div>
+                                ))}
+                                <button type="button" onClick={handleAddColor} className="mt-2 text-sm text-blue-600 hover:underline">
+                                    Add Color
+                                </button>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Sizes:</label>
+                                {size.map((s, index) => (
+                                    <div key={index} className="flex space-x-2 mt-1">
+                                        <input
+                                            type="text"
+                                            value={s}
+                                            onChange={e => handleSizeChange(index, e.target.value)}
+                                            required
+                                            className="mt-1 block w-full p-1 h-8 text-xs border border-gray-300 rounded"
+                                        />
+                                    </div>
+                                ))}
+                                <button type="button" onClick={handleAddSize} className="mt-2 text-sm text-blue-600 hover:underline">
+                                    Add Size
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Description:</label>
+                            <JoditEditor
+                                value={description}
+                                tabIndex={1}
+                                onBlur={(newContent) => setDescription(newContent)}
+                                onChange={(newContent) => { }}
+                            />
+                        </div>
+
+                        {successfull && (
+                            <Alert name=' Update Successful!' />
+                        )}
+
+                        <button type="submit" className="mt-4 w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            Update Post
                         </button>
-                    </div>
+                    </form>
                 </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Description:</label>
-                    <JoditEditor
-                        value={description}
-                        tabIndex={1}
-                        onBlur={(newContent) => setDescription(newContent)}
-                        onChange={(newContent) => { }}
-                    />
-                </div>
-
-                {successfull && (
-                    <Alert name=' Update Successful!' />
-                )}
-
-                <button type="submit" className="mt-4 w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                    Update Post
-                </button>
-            </form>
-        </div>
+            </div>
+        </>
     );
 };
 

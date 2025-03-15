@@ -33,7 +33,7 @@ export default function Layout() {
 
             {/* Sidebar */}
             <aside
-                className={`fixed top-0 left-0 h-full bg-gray-800 text-white p-4 w-[250px] z-40 transform ${isOpen ? "translate-x-0" : "-translate-x-full"} transition-transform md:translate-x-0`}
+                className={`fixed top-0 left-0 h-full bg-gray-800 text-white p-4 w-[250px] z-20 transform ${isOpen ? "translate-x-0" : "-translate-x-full"} transition-transform md:translate-x-0`}
             >
                 <h1 className="text-xl font-bold mt-14 md:mt-0 mb-6">Admin Dashboard</h1>
                 <nav className="space-y-1">
@@ -59,7 +59,7 @@ export default function Layout() {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 p-6 md:ml-[250px]">
+            <main className="flex-1 p-6  md:ml-[250px]">
                 <Outlet />
             </main>
         </div>
