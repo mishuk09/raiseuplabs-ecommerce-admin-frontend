@@ -3,25 +3,29 @@ import React, { useEffect, useState } from "react";
 import { Pencil, Trash } from 'lucide-react';
 import UpdatePost from "../Post/UpdatePost";
 import DeletePost from "../Post/DeletePost";
+import AddPost from "../Post/AddPost";
 
 
 const Home = () => {
     const [item, setItem] = useState([]);
     const [edit, setEdit] = useState(null);
     const [remove, setRemove] = useState(null);
+    const [add, setAdd] = useState(false);
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await axios.get('http://localhost:5000/posts/');
-                setItem(response.data);
 
-            } catch (error) {
-                console.error(error)
-            }
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/posts/');
+            setItem(response.data);
+
+        } catch (error) {
+            console.error(error)
         }
+    }
+    useEffect(() => {
         fetchData()
-    }, []);
+    }, [])
+
 
     const hanldleEdit = (id) => {
         setEdit(id);
@@ -36,17 +40,28 @@ const Home = () => {
     const handleDeleteClose = () => {
         setRemove(null);
     };
+
+    const handleAddItem = () => {
+        setAdd(true);
+    }
+    const handleAddClose = () => {
+        setAdd(false)
+    }
     return (
         <div className="overflow-x-auto">
 
             <h1 class="text-3xl font-bold text-center text-gray-800 mt-10">👋 Welcome Admin Dashboard</h1>
 
             {
-                edit && <UpdatePost id={edit} onClose={hanldleEditClose} />
+                add && <AddPost onClose={handleAddClose} onAdd={fetchData} />
             }
             {
-                remove && <DeletePost id={remove} onClose={handleDeleteClose} />
+                edit && <UpdatePost id={edit} onClose={hanldleEditClose} onUpdate={fetchData} />
             }
+            {
+                remove && <DeletePost id={remove} onClose={handleDeleteClose} onDelete={fetchData} />
+            }
+
 
             <div class="flex justify-between mt-10 mb-3">
                 <div>
@@ -55,7 +70,7 @@ const Home = () => {
 
                 <div class="flex    mb-2">
 
-                    <div
+                    <div onClick={handleAddItem}
                         class=" bg-white cursor-pointer me-2 flex text-center items-center justify-center rounded border border-1 border-blue-500 hover:ring-1 delay-100 transition hover:border-blue-600 px-2 w-[200px] py-1">
                         <div class="flex text-center items-center justify-center">
                             <div class="text-xs me-2">
