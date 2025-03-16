@@ -1,12 +1,12 @@
 // src/components/DeletePost.js
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
 import { FaTrashAlt, FaRegTimesCircle } from 'react-icons/fa';
+import Alert from '../Alert';
 
-const DeletePost = ({ id, onClose }) => {
-    // const { id } = useParams();
-    const navigate = useNavigate();
+const DeletePost = ({ id, onClose, onDelete }) => {
+
+    const [success, setSuccess] = useState(false);
 
 
 
@@ -14,7 +14,13 @@ const DeletePost = ({ id, onClose }) => {
         axios.delete(`http://localhost:5000/posts/${id}`)
             .then(() => {
                 console.log('Post deleted.');
-                navigate('/');
+                setSuccess(true)
+                setTimeout(() => {
+                    setSuccess(false);
+                    onDelete();
+                    onClose();
+                }, 1000);
+
             })
             .catch(err => console.log(err));
     }
@@ -23,6 +29,9 @@ const DeletePost = ({ id, onClose }) => {
 
     return (
         <>
+            {success && (
+                <Alert name='Delete successfull...' />
+            )}
             <div className='fixed inset-0 bg-gray-900 opacity-50'
                 onClick={onClose}>
 

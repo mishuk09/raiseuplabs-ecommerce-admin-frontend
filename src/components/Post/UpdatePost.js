@@ -4,7 +4,7 @@ import JoditEditor from 'jodit-react';
 import Alert from '../Alert';
 import { X } from 'lucide-react';
 
-const UpdatePost = ({ id, onClose }) => {
+const UpdatePost = ({ id, onClose, onUpdate }) => {
     // const { id } = useParams();
     const [img, setImg] = useState('');
     const [category, setCategory] = useState('');
@@ -88,6 +88,7 @@ const UpdatePost = ({ id, onClose }) => {
             });
 
             setSuccessfull(true);
+            onUpdate()
             setTimeout(() => {
                 setSuccessfull(false)
             }, 3000);
