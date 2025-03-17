@@ -111,7 +111,7 @@ const Home = () => {
                     <h2 class="text-xl font-semibold text-gray-800 mb-4">Items List</h2>
                 </div>
 
-                <div class="flex    mb-2">
+                <div class="flex  mb-2">
 
                     <div onClick={handleAddItem}
                         class=" bg-white cursor-pointer me-2 flex text-center items-center justify-center rounded border border-1 border-blue-500 hover:ring-1 delay-100 transition hover:border-blue-600 px-2 w-[200px] py-1">
@@ -134,7 +134,7 @@ const Home = () => {
                             <input
                                 value={searchQuery}
                                 onChange={handleSearch}
-                                type="text" placeholder="Search assets..." class="border border-gray-300 rounded-l px-3 py-1 text-sm w-full focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                                type="text" placeholder="Search assets..." class="border border-blue-500 rounded-l px-3 py-1 text-sm w-full focus:outline-none focus:ring-1 focus:ring-blue-500" />
                             <button type="button" onclick="fetchSearchResults()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-r text-sm">
                                 Search
                             </button>
@@ -187,19 +187,32 @@ const Home = () => {
                     )}
                 </tbody>
             </table>
-            <div className="pagination">
-                <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Prev</button>
+            <div className="pagination flex justify-end space-x-2 p-4">
+                <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`px-3 py-1 border  shadow rounded-lg ${currentPage === 1 ? 'opacity-50 cursor-not-allowed ' : 'hover:bg-blue-100'}`}
+                >
+                    Prev
+                </button>
                 {[...Array(totalPages)].map((_, index) => (
                     <button
                         key={index}
                         onClick={() => handlePageChange(index + 1)}
-                        className={currentPage === index + 1 ? 'bg-blue-500 text-white' : ''}
+                        className={`px-3 py-1 border rounded-lg transition-colors   ${currentPage === index + 1 ? 'bg-red-500 text-white' : 'hover:bg-blue-100'}`}
                     >
                         {index + 1}
                     </button>
                 ))}
-                <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
+                <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`px-3 py-1 border shadow rounded-lg ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-100'}`}
+                >
+                    Next
+                </button>
             </div>
+
         </div>
     );
 };

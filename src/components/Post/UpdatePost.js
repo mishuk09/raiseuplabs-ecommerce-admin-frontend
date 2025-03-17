@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import JoditEditor from 'jodit-react';
@@ -80,7 +81,7 @@ const UpdatePost = ({ id, onClose, onUpdate }) => {
             }
 
             // Send the request to update the post
-            const response = await axios.post(`http://localhost:5000/posts/update/${id}`, formData, {
+            await axios.post(`http://localhost:5000/posts/update/${id}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',  // Set the content type to multipart/form-data
