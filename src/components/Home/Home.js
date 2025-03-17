@@ -11,7 +11,33 @@ const Home = () => {
     const [edit, setEdit] = useState(null);
     const [remove, setRemove] = useState(null);
     const [add, setAdd] = useState(false);
+    // Search states
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 6; // Number of items per page
 
+
+    // Fetch search results dynamically
+    const handleSearch = async (event) => {
+        const query = event.target.value;
+        setSearchQuery(query);
+
+        if (query.trim() === "") {
+            setSearchResults([]);
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5000/posts/search?q=${query}`);
+            const data = await response.json();
+
+            setSearchResults(data.items || []);
+        } catch (error) {
+            console.error("Error fetching search results:", error);
+            setSearchResults([]);
+        }
+    };
 
     const fetchData = async () => {
         try {
@@ -26,6 +52,7 @@ const Home = () => {
         fetchData()
     }, [])
 
+    const dataShow = searchQuery && searchResults.length > 0 ? searchResults : item;
 
     const hanldleEdit = (id) => {
         setEdit(id);
@@ -47,6 +74,19 @@ const Home = () => {
     const handleAddClose = () => {
         setAdd(false)
     }
+
+
+
+    // const dataShow = searchQuery && searchResults.length > 0 ? searchResults : item;
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = dataShow.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(dataShow.length / itemsPerPage);
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
     return (
         <div className="overflow-x-auto">
 
@@ -88,18 +128,15 @@ const Home = () => {
 
                     <div class="  w-full md:w-[350px]">
                         <form id="searchForm" class="flex" onsubmit="return false;">
-                            <input type="text" id="searchQuery" placeholder="Search assets..." class="border border-gray-300 rounded-l px-3 py-1 text-sm w-full focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                            <input
+                                value={searchQuery}
+                                onChange={handleSearch}
+                                type="text" placeholder="Search assets..." class="border border-gray-300 rounded-l px-3 py-1 text-sm w-full focus:outline-none focus:ring-1 focus:ring-blue-500" />
                             <button type="button" onclick="fetchSearchResults()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-r text-sm">
                                 Search
                             </button>
                         </form>
                         <div id="searchResults" class="absolute w-full bg-white shadow-md rounded mt-1 hidden z-10"></div>
-                    </div>
-
-
-
-                    <div>
-
                     </div>
                 </div>
             </div>
@@ -119,8 +156,8 @@ const Home = () => {
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 text-gray-700 text-sm">
-                    {item && item.length > 0 ? (
-                        item.map((product, index) => (
+                    {currentItems && currentItems.length > 0 ? (
+                        currentItems.slice(0, 6).map((product, index) => (
                             <tr key={index} className="hover:bg-gray-50 text-sm cursor-pointer transition">
                                 <td className="px-2 py-1">
                                     <img src={product.img} alt={product.title} className="w-10 h-10 object-cover rounded border" />
@@ -147,6 +184,19 @@ const Home = () => {
                     )}
                 </tbody>
             </table>
+            <div className="pagination">
+                <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Prev</button>
+                {[...Array(totalPages)].map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => handlePageChange(index + 1)}
+                        className={currentPage === index + 1 ? 'bg-blue-500 text-white' : ''}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+                <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
+            </div>
         </div>
     );
 };
