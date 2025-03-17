@@ -6,6 +6,7 @@ import DeletePost from "../Post/DeletePost";
 import AddPost from "../Post/AddPost";
 
 
+
 const Home = () => {
     const [item, setItem] = useState([]);
     const [edit, setEdit] = useState(null);
@@ -52,7 +53,9 @@ const Home = () => {
         fetchData()
     }, [])
 
-    const dataShow = searchQuery && searchResults.length > 0 ? searchResults : item;
+    // const dataShow = searchQuery && searchResults.length > 0 ? searchResults : item;
+    const dataShow = searchQuery.length > 0 ? searchResults : item;
+
 
     const hanldleEdit = (id) => {
         setEdit(id);
