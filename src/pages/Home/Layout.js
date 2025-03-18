@@ -22,7 +22,7 @@ export default function Layout() {
     };
 
     return (
-        <div className="flex h-auto min-h-screen bg-blue-50">
+        <div className="flex h-auto overflow-x-auto  min-h-screen bg-blue-50">
             {/* Sidebar Toggle Button (Mobile) */}
             <button
                 className={`md:hidden p-2 ${isOpen ? "bg-gray-800 text-white fixed top-2 left-2 z-50 rounded-lg" : "bg-gray-100 text-black fixed top-2 left-2 z-50 rounded-lg"} `}

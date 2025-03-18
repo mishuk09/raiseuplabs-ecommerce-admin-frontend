@@ -4,6 +4,7 @@ import { Pencil, Trash } from 'lucide-react';
 import UpdatePost from "../Post/UpdatePost";
 import DeletePost from "../Post/DeletePost";
 import AddPost from "../Post/AddPost";
+import Spin from "../utills/Spin";
 
 
 
@@ -11,12 +12,13 @@ const Home = () => {
     const [item, setItem] = useState([]);
     const [edit, setEdit] = useState(null);
     const [remove, setRemove] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [add, setAdd] = useState(false);
     // Search states
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 6; // Number of items per page
+    const itemsPerPage = 7; // Number of items per page
 
 
     // Fetch search results dynamically
@@ -44,6 +46,8 @@ const Home = () => {
         try {
             const response = await axios.get('http://localhost:5000/posts/');
             setItem(response.data);
+            setLoading(false);
+
 
         } catch (error) {
             console.error(error)
@@ -93,7 +97,7 @@ const Home = () => {
     return (
         <div className="overflow-x-auto">
 
-            <h1 class="text-3xl font-bold text-center text-gray-800 mt-10">👋 Welcome Admin Dashboard</h1>
+            <h1 class="text-3xl font-bold text-center text-gray-800 mt-6">👋 Welcome Admin Dashboard</h1>
 
             {
                 add && <AddPost onClose={handleAddClose} onAdd={fetchData} />
@@ -143,50 +147,53 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-            <table className="min-w-full border border-gray-300  ">
-                <thead className="rounded-full">
-                    <tr className="bg-sky-300 text-gray-800 font-normal ">
-                        <th className="px-4 py-2 ">Image</th>
-                        <th className="px-4 py-2 ">Category</th>
-                        <th className="px-4 py-2 ">Title</th>
-                        <th className="px-4 py-2 ">New P</th>
-                        <th className="px-4 py-2 ">Old P</th>
-                        <th className="px-4 py-2 ">Stock</th>
-                        <th className="px-4 py-2 ">Color</th>
-                        <th className="px-4 py-2 ">Size</th>
-                        <th className="px-4 py-2 ">Edit</th>
-                        <th className="px-4 py-2 ">Delete</th>
+
+
+            <table className="min-w-full border border-gray-300 table-fixed">
+                <thead className="bg-sky-300 text-gray-800 font-normal">
+                    <tr>
+                        {['Image', 'Category', 'Title', 'New P', 'Old P', 'Stock', 'Color', 'Size', 'Edit', 'Delete'].map((header, index) => (
+                            <th key={index} className={`px-4 py-2 ${['Title'].includes(header) ? 'w-48' : ['New P', 'Old P'].includes(header) ? 'w-28' : ['Stock'].includes(header) ? 'w-10' : ['Color', 'Size'].includes(header) ? 'w-40' : ['Edit', 'Delete'].includes(header) ? 'w-10' : 'w-24'}  ${['Image'].includes(header) ? 'text-start' : 'text-center'}`}>{header}</th>
+                        ))}
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 text-gray-700 text-sm">
-                    {currentItems && currentItems.length > 0 ? (
-                        currentItems.slice(0, 6).map((product, index) => (
-                            <tr key={index} className="hover:bg-gray-50 text-sm cursor-pointer transition">
-                                <td className="px-2 py-1">
+                    {loading ? (
+
+                        <tr className="min-h-[320px] w-full bg-white">
+                            <td rowSpan="7" colSpan="10">
+                                <div className="flex items-center justify-center min-h-[350px]">
+                                    <Spin />
+                                </div>
+                            </td>
+                        </tr>
+
+                    ) : (
+                        currentItems.map((product, index) => (
+                            <tr key={index} className="bg-white hover:bg-gray-50 text-sm cursor-pointer transition">
+                                <td className="px-2 py-1 w-24 text-start">
                                     <img src={product.img} alt={product.title} className="w-10 h-10 object-cover rounded border" />
                                 </td>
-                                <td className="px-2 py-1 ">{product.category}</td>
-                                <td className="px-2 py-1   font-medium">{product.title}</td>
-                                <td className="px-2 py-1   font-medium">${product.newPrice}</td>
-                                <td className="px-2 py-1 line-through text-gray-500">${product.oldPrice}</td>
-                                <td className="px-2 py-1   text-gray-500">{product.stock}</td>
-                                <td className="px-2 py-1">{product.color?.join(", ") || "-"}</td>
-                                <td className="px-2 py-1">{product.size?.join(", ") || "-"}</td>
-                                <td className="px-2 py-1   gap-2">
-                                    <button onClick={() => hanldleEdit(product._id)} className="bg-white hover:bg-gray-100  text-gray-400 px-4 py-2 rounded text-sm transition"><Pencil size={15} /></button>
+                                <td className="px-2 py-1 w-24 text-start">{product.category}</td>
+                                <td className="px-2 py-1 w-48 text-start font-medium">{product.title}</td>
+                                <td className="px-2 py-1 w-28 text-center font-medium">${product.newPrice}</td>
+                                <td className="px-2 py-1 w-28 text-center line-through text-gray-500">${product.oldPrice}</td>
+                                <td className="px-2 py-1 w-10 text-center text-gray-500">{product.stock}</td>
+                                <td className="px-2 py-1 w-40 text-center">{product.color?.join(", ") || "-"}</td>
+                                <td className="px-2 py-1 w-40 text-center">{product.size?.join(", ") || "-"}</td>
+                                <td className="px-2 py-1 w-10 text-center gap-2">
+                                    <button onClick={() => hanldleEdit(product._id)} className="bg-blue-50 hover:bg-gray-100 text-gray-400 px-4 py-2 rounded text-sm transition"><Pencil size={15} /></button>
                                 </td>
-                                <td className="px-2 py-1  gap-2">
-                                    <button onClick={() => handleDelete(product._id)} className="bg-white hover:bg-gray-100   text-red-500 px-4 py-2 rounded text-sm transition"><Trash size={15} /></button>
+                                <td className="px-2 py-1 w-10 text-center gap-2">
+                                    <button onClick={() => handleDelete(product._id)} className="bg-red-50 hover:bg-gray-100 text-red-500 px-4 py-2 rounded text-sm transition"><Trash size={15} /></button>
                                 </td>
                             </tr>
                         ))
-                    ) : (
-                        <tr>
-                            <td colSpan="8" className="text-center py-4 text-gray-500">No items available</td>
-                        </tr>
                     )}
                 </tbody>
+
             </table>
+
             <div className="pagination flex justify-end space-x-2 p-4">
                 <button
                     onClick={() => handlePageChange(currentPage - 1)}
