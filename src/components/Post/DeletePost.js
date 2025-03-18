@@ -3,14 +3,17 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { FaTrashAlt, FaRegTimesCircle } from 'react-icons/fa';
 import Alert from '../Alert';
+import LoadingSpin from '../utills/LoadingSpin';
 
 const DeletePost = ({ id, onClose, onDelete }) => {
 
     const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
 
 
 
     const handleDelete = () => {
+        setLoading(true)
         axios.delete(`http://localhost:5000/posts/${id}`)
             .then(() => {
                 console.log('Post deleted.');
@@ -23,6 +26,7 @@ const DeletePost = ({ id, onClose, onDelete }) => {
 
             })
             .catch(err => console.log(err));
+        
     }
 
 
@@ -41,10 +45,14 @@ const DeletePost = ({ id, onClose, onDelete }) => {
                     <h2 className="text-2xl font-semibold mb-4">Are you sure you want to delete this post?</h2>
                     <div className="flex justify-center">
                         <button
+                            disabled={loading}
                             onClick={handleDelete}
-                            className="flex items-center bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200 mr-4"
+                            className="flex items-center bg-red-500 text-white py-2 px-8 rounded-lg hover:bg-red-600 transition duration-200 mr-4"
                         >
-                            <FaTrashAlt className="mr-2" /> Yes, Delete
+                           
+                            {
+                                loading ? <LoadingSpin /> : <><FaTrashAlt className="mr-2" /> Yes</>
+                            }
                         </button>
                         <button
                             onClick={onClose}

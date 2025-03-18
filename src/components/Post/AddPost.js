@@ -3,6 +3,7 @@ import axios from 'axios';
 import JoditEditor from 'jodit-react';
 import { X } from 'lucide-react';
 import Alert from '../Alert';
+import LoadingSpin from '../utills/LoadingSpin';
 
 const AddPost = ({ onClose, onAdd }) => {
     const [img, setImg] = useState(null);
@@ -15,12 +16,14 @@ const AddPost = ({ onClose, onAdd }) => {
     const [size, setSize] = useState([]);
     const [description, setDescription] = useState('');
     const [successMessage, setSuccessMessage] = useState(false);
+    const [loading, setLoading] = useState(false);
     const editor = useRef(null);
 
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);  // Start loading when submission begins
         const formData = new FormData();
         formData.append('image', img);
         formData.append('category', category);
@@ -28,18 +31,16 @@ const AddPost = ({ onClose, onAdd }) => {
         formData.append('newPrice', newPrice);
         formData.append('oldPrice', oldPrice);
         formData.append('stock', stock);
-
-        // Append color and size as individual fields
         color.forEach(c => formData.append('color[]', c));
         size.forEach(s => formData.append('size[]', s));
-
         formData.append('description', description);
 
         try {
             const res = await axios.post('http://localhost:5000/posts/add', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
-            //reset feild
+
+            // Reset fields
             setImg('');
             setCategory('');
             setTitle('');
@@ -52,12 +53,15 @@ const AddPost = ({ onClose, onAdd }) => {
 
             console.log(res.data);
             setSuccessMessage(true);
-            onAdd()
+            onAdd();
             setTimeout(() => setSuccessMessage(false), 3000);
         } catch (err) {
             console.error(err);
+        } finally {
+            setLoading(false);  // Stop loading once the request completes
         }
     };
+
 
     const handleAddColor = () => setColor([...color, '']);
 
@@ -210,10 +214,15 @@ const AddPost = ({ onClose, onAdd }) => {
 
                         <button
                             type="submit"
-                            className="mt-4 w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                            disabled={loading}
+                            className="mt-4 w-full addItem-btn p-2   text-white rounded-md   flex items-center justify-center"
                         >
-                            Add Post
+
+                            {loading ? <LoadingSpin /> : 'Add Post'}
                         </button>
+                       
+
+
                     </form>
                 </div>
             </div>

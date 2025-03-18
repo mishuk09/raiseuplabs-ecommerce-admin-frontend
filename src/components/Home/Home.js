@@ -25,6 +25,7 @@ const Home = () => {
     const handleSearch = async (event) => {
         const query = event.target.value;
         setSearchQuery(query);
+        setCurrentPage(1); // Reset pagination to the first page
 
         if (query.trim() === "") {
             setSearchResults([]);
@@ -164,11 +165,12 @@ const Home = () => {
                             <td rowSpan="7" colSpan="10">
                                 <div className="flex items-center justify-center min-h-[350px]">
                                     <Spin />
+                                    {/* <LoadingSpin /> */}
                                 </div>
                             </td>
                         </tr>
 
-                    ) : (
+                    ) : currentItems.length > 0 ? (
                         currentItems.map((product, index) => (
                             <tr key={index} className="bg-white hover:bg-gray-50 text-sm cursor-pointer transition">
                                 <td className="px-2 py-1 w-24 text-start">
@@ -189,6 +191,10 @@ const Home = () => {
                                 </td>
                             </tr>
                         ))
+                    ) : (
+                        <tr>
+                            <td colSpan="10" className="text-center py-4">No items</td>
+                        </tr>
                     )}
                 </tbody>
 

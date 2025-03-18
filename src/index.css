@@ -4,10 +4,19 @@
 
 
 
+:root {
+  --primary-color: #DB4444;
+  --category-color: #00FF66;
+}
+
+
+.addItem-btn{
+  background-color: var(--primary-color);
+}
 
 body {
   margin: 0;
-  font-family: jost ;
+  font-family: jost;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

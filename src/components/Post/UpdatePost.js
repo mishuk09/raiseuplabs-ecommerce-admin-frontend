@@ -4,9 +4,9 @@ import axios from 'axios';
 import JoditEditor from 'jodit-react';
 import Alert from '../Alert';
 import { X } from 'lucide-react';
+import LoadingSpin from '../utills/LoadingSpin';
 
 const UpdatePost = ({ id, onClose, onUpdate }) => {
-    // const { id } = useParams();
     const [img, setImg] = useState('');
     const [category, setCategory] = useState('');
     const [title, setTitle] = useState('');
@@ -17,6 +17,7 @@ const UpdatePost = ({ id, onClose, onUpdate }) => {
     const [size, setSize] = useState([]);
     const [description, setDescription] = useState('');
     const [successfull, setSuccessfull] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -56,7 +57,7 @@ const UpdatePost = ({ id, onClose, onUpdate }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        setLoading(true);
         // Create FormData to handle file uploads
         const formData = new FormData();
         formData.append('category', category);
@@ -95,6 +96,8 @@ const UpdatePost = ({ id, onClose, onUpdate }) => {
             }, 3000);
         } catch (err) {
             console.log(err);
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -225,8 +228,13 @@ const UpdatePost = ({ id, onClose, onUpdate }) => {
                             <Alert name=' Update Successful!' />
                         )}
 
-                        <button type="submit" className="mt-4 w-full p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                            Update Post
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="mt-4 w-full addItem-btn p-2 h-10   text-white rounded-md   flex items-center justify-center"
+                        >
+
+                            {loading ? <LoadingSpin /> : 'Update'}
                         </button>
                     </form>
                 </div>
