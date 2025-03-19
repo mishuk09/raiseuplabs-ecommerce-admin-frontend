@@ -26,7 +26,7 @@ const DeletePost = ({ id, onClose, onDelete }) => {
 
             })
             .catch(err => console.log(err));
-        
+
     }
 
 
@@ -49,7 +49,7 @@ const DeletePost = ({ id, onClose, onDelete }) => {
                             onClick={handleDelete}
                             className="flex items-center bg-red-500 text-white py-2 px-8 rounded-lg hover:bg-red-600 transition duration-200 mr-4"
                         >
-                           
+
                             {
                                 loading ? <LoadingSpin /> : <><FaTrashAlt className="mr-2" /> Yes</>
                             }

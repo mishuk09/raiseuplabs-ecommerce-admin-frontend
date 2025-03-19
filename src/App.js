@@ -76,8 +76,8 @@ function App() {
             <Route path='/addpost' element={<AddPost />} />
             <Route path="/update/:id" element={<UpdatePost />} />
             <Route path="/delete/:id" element={<DeletePost />} />
-            <Route path="/edit" element={<Edit />} />
-            <Route path="/delete" element={<Delete />} />
+            {/* <Route path="/edit" element={<Edit />} />
+            <Route path="/delete" element={<Delete />} /> */}
           </Route>
         </Route>
       </Routes>

@@ -129,11 +129,10 @@ const UpdatePost = ({ id, onClose, onUpdate }) => {
     };
 
     return (
-        <>
-            <div
-                className="fixed inset-0 bg-slate-900   opacity-50"
-                onClick={onClose}
-            ></div>
+        <>  {successfull && (
+            <Alert name=' Update Successful!' />
+        )}
+
             <div className="fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
                 <div className="max-w-4xl 2xl:max-w-7xl max-h-[500px] 2xl:max-h-[600px] relative overflow-y-auto overflow-x-hidden h-auto bg-white p-4 rounded">
 
@@ -224,14 +223,12 @@ const UpdatePost = ({ id, onClose, onUpdate }) => {
                             />
                         </div>
 
-                        {successfull && (
-                            <Alert name=' Update Successful!' />
-                        )}
+
 
                         <button
                             type="submit"
                             disabled={loading}
-                            className="mt-4 w-full addItem-btn p-2 h-10   text-white rounded-md   flex items-center justify-center"
+                            className="mt-4 w-full addItem-btn p-2    text-white rounded-md   flex items-center justify-center"
                         >
 
                             {loading ? <LoadingSpin /> : 'Update'}
