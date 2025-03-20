@@ -1,15 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import * as XLSX from 'xlsx'; // Import SheetJS
+import { Package } from 'lucide-react';
+
+import * as XLSX from 'xlsx';
+import Spin from '../utills/Spin';
+import LoadingSpin from '../utills/LoadingSpin';
+import Alert from '../Alert';
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingOrderId, setLoadingOrderId] = useState(null);
     const [error, setError] = useState(null);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 7;
+
+    const handleSearch = async (event) => {
+        const query = event.target.value;
+        setSearchQuery(query);
+        setCurrentPage(1); // Reset pagination to the first page
+
+        if (query.trim() === "") {
+            setSearchResults([]);
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5000/item/search?q=${query}`);
+            const data = await response.json();
+
+            setSearchResults(data.items || []);
+        } catch (error) {
+            console.error("Error fetching search results:", error);
+            setSearchResults([]);
+        }
+    };
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -31,12 +60,15 @@ const Orders = () => {
     }, []);
 
     const handleCompleteOrder = async (orderId) => {
+        setLoadingOrderId(orderId);
         try {
             await axios.delete(`http://localhost:5000/item/orders/${orderId}`)
-            // Remove the completed order from the UI
+
             setOrders(orders.filter(order => order._id !== orderId));
         } catch (error) {
             console.error('Error completing order:', error);
+        } finally {
+            setLoadingOrderId(false);
         }
     };
 
@@ -76,105 +108,184 @@ const Orders = () => {
         setSelectedOrder(null);
     };
 
+    const dataShow = searchQuery.length > 0 ? searchResults : orders;
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = dataShow.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(dataShow.length / itemsPerPage);
+
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
     return (
         <div className="mx-auto p-4">
+            {
+                loadingOrderId && (
+                    <Alert name="Order completed..." />
+                )
+            }
             <h1 className="text-3xl font-bold text-center mb-8">Orders Management</h1>
-            <div className="text-center flex justify-end mb-4">
-                <button
-                    onClick={exportToExcel}
-                    className="bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                    Download Excel
-                </button>
-            </div>
-            {loading ? (
-                <div className="flex justify-center items-center h-screen">
-                    <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+            <div class="flex justify-between mt-10 mb-3">
+                <div>
+                    <h2 class="flex gap-2 text-xl font-medium justify-end text-gray-800 mb-4"> <Package />Order List</h2>
                 </div>
-            ) : error ? (
-                <div className="text-red-500">{error}</div>
-            ) : (
-                <>
-                    {orders.length === 0 ? (
-                        <p className="text-lg h-[100vh] text-center font-semibold">No orders found.</p>
-                    ) : (
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full bg-white border border-gray-300">
-                                <thead>
-                                    <tr className="bg-gray-100">
-                                        <th className="px-4 py-2 border">Sr No</th>
-                                        <th className="px-4 py-2 border">Full Name</th>
-                                        <th className="px-4 py-2 border">Email</th>
-                                        <th className="px-4 py-2 border">Phone</th>
-                                        <th className="px-4 py-2 border">City</th>
-                                        <th className="px-4 py-2 border">Total Amount</th>
-                                        <th className="px-4 py-2 border">Items</th>
-                                        <th className="px-4 py-2 border">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {orders.map((order, index) => (
-                                        <tr key={order._id} className="text-center">
-                                            <td className="px-4 py-2 border">{index + 1}</td>
-                                            <td className="px-4 py-2 border">{order.fullName}</td>
-                                            <td className="px-4 py-2 border">{order.email}</td>
-                                            <td className="px-4 py-2 border">{order.phoneNumber}</td>
-                                            <td className="px-4 py-2 border">{order.city}</td>
-                                            <td className="px-4 py-2 border">${order.totalAmount}</td>
-                                            <td className="px-4 py-2 border">
-                                                <button
-                                                    onClick={() => openModal(order)}
-                                                    className="bg-blue-500 text-white text-xs px-3 py-1 rounded"
-                                                >
-                                                    View List
-                                                </button>
-                                            </td>
 
-                                            <td className="px-4 py-2 border">
-                                                <button
-                                                    onClick={() => handleCompleteOrder(order._id)}
-                                                    className="bg-blue-500 text-white text-xs font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline"
-                                                >
-                                                    Complete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                <div class="flex  mb-2">
 
-                            {/* Modal */}
-                            {isModalOpen && selectedOrder && (
-                                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                                    <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] max-w-full">
-                                        <h2 className="text-xl font-bold mb-4">Order Details</h2>
-                                        <div className="overflow-y-auto max-h-[300px]">
-                                            {selectedOrder.cartItems.map((item, idx) => (
-                                                <div key={idx} className="flex items-center space-x-4 p-2 border rounded-lg shadow-sm bg-gray-50">
-                                                    <img src={item.img} alt={item.title} className="w-10 h-10 object-cover rounded-md" />
-                                                    <div className="text-left">
-                                                        <p className="font-semibold">{item.title}</p>
-                                                        <p className="text-sm text-gray-600">Color: {item.color}</p>
-                                                        <p className="text-sm text-gray-600">Size: {item.size}</p>
-                                                        <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
-                                                        <p className="text-sm text-gray-600">Price: ${item.price}</p>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
+                    <div
+                        class=" bg-white cursor-pointer me-2 flex text-center items-center justify-center rounded border border-1 border-blue-500 hover:ring-1 delay-100 transition hover:border-blue-600 px-2 w-[200px] py-1">
+                        <div onClick={exportToExcel} class="flex text-center items-center justify-center">
+                            <div class="text-xs me-2">
+                                ➕
+                            </div>
+                            <div>
+                                <span class="text-gray-500">Download Excel</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div class="  w-full md:w-[350px]">
+                        <form id="searchForm" class="flex" onsubmit="return false;">
+                            <input
+                                value={searchQuery}
+                                onChange={handleSearch}
+                                type="text" placeholder="Search assets..." class="border border-blue-500 rounded-l px-3 py-1 text-sm w-full focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                            <button type="button" onclick="fetchSearchResults()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-r text-sm">
+                                Search
+                            </button>
+                        </form>
+                        <div id="searchResults" class="absolute w-full bg-white shadow-md rounded mt-1 hidden z-10"></div>
+                    </div>
+                </div>
+            </div>
+
+            <table className="min-w-full border border-gray-300 table-fixed">
+                <thead className='bg-sky-300 text-gray-800 font-normal'>
+                    <tr className=" ">
+                        <th className="px-4 py-2 border">Sr No</th>
+                        <th className="px-4 py-2 border">Full Name</th>
+                        <th className="px-4 py-2 border">Email</th>
+                        <th className="px-4 py-2 border">Phone</th>
+                        <th className="px-4 py-2 border">City</th>
+                        <th className="px-4 py-2 border">Total Amount</th>
+                        <th className="px-4 py-2 border">Items</th>
+                        <th className="px-4 py-2 border">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        loading ? (
+                            <tr className="min-h-[320px] w-full bg-white">
+                                <td rowSpan="7" colSpan="10">
+                                    <div className="flex items-center justify-center min-h-[350px]">
+                                        <Spin />
+
+                                    </div>
+                                </td>
+                            </tr>
+                        ) : currentItems.length > 0 ? (
+                            currentItems.map((order, index) => (
+                                <tr key={order._id} className="text-center bg-white">
+                                    <td className="px-4 py-2 border">{index + 1}</td>
+                                    <td className="px-4 py-2 border">{order.fullName}</td>
+                                    <td className="px-4 py-2 border">{order.email}</td>
+                                    <td className="px-4 py-2 border">{order.phoneNumber}</td>
+                                    <td className="px-4 py-2 border">{order.city}</td>
+                                    <td className="px-4 py-2 border">${order.totalAmount}</td>
+                                    <td className="px-4 py-2 border">
                                         <button
-                                            onClick={closeModal}
-                                            className="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded"
+                                            onClick={() => openModal(order)}
+                                            className="bg-blue-500 text-white text-xs px-3 py-2 rounded"
                                         >
-                                            Close
+                                            View List
                                         </button>
+                                    </td>
+
+                                    <td className="px-4 py-2 border">
+                                        <button
+                                            disabled={loadingOrderId === order._id}
+                                            onClick={() => handleCompleteOrder(order._id)}
+                                            className="bg-blue-500 text-white text-xs font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline"
+                                        >
+                                            {
+                                                loadingOrderId === order._id ? <LoadingSpin /> : 'Complete'
+                                            }
+                                        </button>
+                                    </td>
+
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="10" className="text-center py-4">No items</td>
+                            </tr>
+                        )}
+
+                </tbody>
+            </table>
+
+            {/* Modal */}
+            {isModalOpen && selectedOrder && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] max-w-full">
+                        <h2 className="text-xl font-bold mb-4">Order Details</h2>
+                        <div className="overflow-y-auto max-h-[300px]">
+                            {selectedOrder.cartItems.map((item, idx) => (
+                                <div key={idx} className="flex items-center space-x-4 p-2 border rounded-lg shadow-sm bg-gray-50">
+                                    <img src={item.img} alt={item.title} className="w-10 h-10 object-cover rounded-md" />
+                                    <div className="text-left">
+                                        <p className="font-semibold">{item.title}</p>
+                                        <p className="text-sm text-gray-600">Color: {item.color}</p>
+                                        <p className="text-sm text-gray-600">Size: {item.size}</p>
+                                        <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                                        <p className="text-sm text-gray-600">Price: ${item.price}</p>
                                     </div>
                                 </div>
-                            )}
+                            ))}
                         </div>
-                    )}
-                </>
+                        <button
+                            onClick={closeModal}
+                            className="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
             )}
+
+
+            <div className="pagination flex justify-end space-x-2 p-4">
+                <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`px-3 py-1 border  shadow rounded-lg ${currentPage === 1 ? 'opacity-50 cursor-not-allowed ' : 'hover:bg-blue-100'}`}
+                >
+                    Prev
+                </button>
+                {[...Array(totalPages)].map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => handlePageChange(index + 1)}
+                        className={`px-3 py-1 border rounded-lg transition-colors   ${currentPage === index + 1 ? 'bg-red-500 text-white' : 'hover:bg-blue-100'}`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+                <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`px-3 py-1 border shadow rounded-lg ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-100'}`}
+                >
+                    Next
+                </button>
+            </div>
+
         </div>
     );
 };
