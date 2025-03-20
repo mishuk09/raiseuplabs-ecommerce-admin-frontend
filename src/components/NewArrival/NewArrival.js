@@ -11,6 +11,7 @@ import DeleteOffer from "../Offer/DeleteOffer";
 import NewAddPost from "./NewAddPost";
 import NewUpdatePost from "./NewUpdatePost";
 import NewDeletePost from "./NewDeletePost";
+import Items from "../utills/Items";
 
 
 
@@ -118,9 +119,7 @@ const NewArrival = () => {
 
 
             <div class="flex justify-between mt-10 mb-3">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Items List</h2>
-                </div>
+                <Items name='New Arriaval' />
 
                 <div class="flex  mb-2">
 

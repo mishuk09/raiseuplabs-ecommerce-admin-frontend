@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Pencil, Trash } from 'lucide-react';
+import { Pencil, Trash, PackageSearch } from 'lucide-react';
 import UpdatePost from "../Post/UpdatePost";
 import DeletePost from "../Post/DeletePost";
 import AddPost from "../Post/AddPost";
@@ -8,6 +8,7 @@ import Spin from "../utills/Spin";
 import EditOffer from "./EditOffer";
 import AddOffer from "./AddOffer";
 import DeleteOffer from "./DeleteOffer";
+import Items from "../utills/Items";
 
 
 
@@ -115,10 +116,9 @@ const Offer = () => {
 
 
             <div class="flex justify-between mt-10 mb-3">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Items List</h2>
-                </div>
 
+                <Items name='Offers'/>
+                
                 <div class="flex  mb-2">
 
                     <div onClick={handleAddItem}

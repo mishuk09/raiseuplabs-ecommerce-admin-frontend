@@ -5,6 +5,7 @@ import Spin from "../utills/Spin";
 import CatAddPost from "./CatAddPost";
 import CatUpdatePost from "./CatUpdatePost";
 import CatDeletePost from "./CatDeletePost";
+import Items from "../utills/Items";
 
 
 
@@ -98,7 +99,7 @@ const Category = () => {
     return (
         <div className="overflow-x-auto">
 
-            <h1 class="text-3xl font-bold text-center text-gray-800 mt-6">👋 Welcome Admin Dashboard</h1>
+            <h1 class="text-3xl font-bold text-center text-gray-800 mt-6">👋 Welcome Category Dashboard</h1>
 
             {
                 add && <CatAddPost onClose={handleAddClose} onAdd={fetchData} />
@@ -112,9 +113,8 @@ const Category = () => {
 
 
             <div class="flex justify-between mt-10 mb-3">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Items List</h2>
-                </div>
+
+                <Items name='Category' />
 
                 <div class="flex  mb-2">
 

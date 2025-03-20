@@ -6,6 +6,7 @@ import * as XLSX from 'xlsx';
 import Spin from '../utills/Spin';
 import LoadingSpin from '../utills/LoadingSpin';
 import Alert from '../Alert';
+import Items from '../utills/Items';
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
@@ -120,17 +121,16 @@ const Orders = () => {
         setCurrentPage(pageNumber);
     };
     return (
-        <div className="mx-auto p-4">
+        <div className="overflow-x-auto">
             {
                 loadingOrderId && (
                     <Alert name="Order completed..." />
                 )
             }
-            <h1 className="text-3xl font-bold text-center mb-8">Orders Management</h1>
+            <h1 class="text-3xl font-bold text-center text-gray-800 mt-6">👋 Welcome Order's Dashboard</h1>
+
             <div class="flex justify-between mt-10 mb-3">
-                <div>
-                    <h2 class="flex gap-2 text-xl font-medium justify-end text-gray-800 mb-4"> <Package />Order List</h2>
-                </div>
+                <Items name='Orders' />
 
                 <div class="flex  mb-2">
 
@@ -145,7 +145,7 @@ const Orders = () => {
                             </div>
                         </div>
 
-                    </div>
+                    </div >
 
 
 
@@ -162,8 +162,8 @@ const Orders = () => {
                         </form>
                         <div id="searchResults" class="absolute w-full bg-white shadow-md rounded mt-1 hidden z-10"></div>
                     </div>
-                </div>
-            </div>
+                </div >
+            </div >
 
             <table className="min-w-full border border-gray-300 table-fixed">
                 <thead className='bg-sky-300 text-gray-800 font-normal'>
@@ -199,9 +199,9 @@ const Orders = () => {
                                     <td className="px-4 py-2 border">{order.phoneNumber}</td>
                                     <td className="px-4 py-2 border">{order.city}</td>
                                     <td className="px-4 py-2 border">${order.totalAmount}</td>
-                                    <td className="px-4 py-2 border">
+                                    <td className="px-4 py-2 border  text-center">
                                         {order.payment ? (
-                                            <span className="text-green-600 font-medium flex items-center"><Check className='me-2' size={20} /> Paid</span>
+                                            <span className="text-green-600 font-medium flex text-center items-center justify-center"><Check className='me-2' size={20} /> Paid</span>
                                         ) : (
                                             <span className="text-red-500 font-bold">❌ Unpaid</span>
                                         )}

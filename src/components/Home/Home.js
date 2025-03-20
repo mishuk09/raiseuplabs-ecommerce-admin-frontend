@@ -5,6 +5,7 @@ import UpdatePost from "../Post/UpdatePost";
 import DeletePost from "../Post/DeletePost";
 import AddPost from "../Post/AddPost";
 import Spin from "../utills/Spin";
+import Items from "../utills/Items";
 
 
 
@@ -112,9 +113,7 @@ const Home = () => {
 
 
             <div class="flex justify-between mt-10 mb-3">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Items List</h2>
-                </div>
+                <Items name='Items' />
 
                 <div class="flex  mb-2">
 
