@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Package, Check } from 'lucide-react';
+import { Package, Check, Download } from 'lucide-react';
 
 import * as XLSX from 'xlsx';
 import Spin from '../utills/Spin';
@@ -138,7 +138,7 @@ const Orders = () => {
                         class=" bg-white cursor-pointer me-2 flex text-center items-center justify-center rounded border border-1 border-blue-500 hover:ring-1 delay-100 transition hover:border-blue-600 px-2 w-[200px] py-1">
                         <div onClick={exportToExcel} class="flex text-center items-center justify-center">
                             <div class="text-xs me-2">
-                                ➕
+                                <Download size={18} className='text-gray-600' />
                             </div>
                             <div>
                                 <span class="text-gray-500">Download Excel</span>
@@ -210,7 +210,7 @@ const Orders = () => {
                                     <td className="px-4 py-2 border">
                                         <button
                                             onClick={() => openModal(order)}
-                                            className="bg-blue-500 text-white text-xs px-3 py-2 rounded"
+                                            className="bg-blue-500 hover:bg-blue-600 transition text-white text-xs px-3 py-2 rounded"
                                         >
                                             View List
                                         </button>
@@ -220,7 +220,7 @@ const Orders = () => {
                                         <button
                                             disabled={loadingOrderId === order._id}
                                             onClick={() => handleCompleteOrder(order._id)}
-                                            className="bg-green-500 text-white text-xs   py-2 px-3 rounded focus:outline-none focus:shadow-outline"
+                                            className="bg-green-500 hover:bg-green-600 transition text-white text-xs   py-2 px-3 rounded focus:outline-none focus:shadow-outline"
                                         >
                                             {
                                                 loadingOrderId === order._id ? <LoadingSpin /> : 'Complete'
