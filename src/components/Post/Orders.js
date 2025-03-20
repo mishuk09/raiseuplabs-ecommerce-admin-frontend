@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Package } from 'lucide-react';
+import { Package, Check } from 'lucide-react';
 
 import * as XLSX from 'xlsx';
 import Spin from '../utills/Spin';
@@ -174,6 +174,7 @@ const Orders = () => {
                         <th className="px-4 py-2 border">Phone</th>
                         <th className="px-4 py-2 border">City</th>
                         <th className="px-4 py-2 border">Total Amount</th>
+                        <th className="px-4 py-2 border">Payment</th>
                         <th className="px-4 py-2 border">Items</th>
                         <th className="px-4 py-2 border">Actions</th>
                     </tr>
@@ -199,6 +200,14 @@ const Orders = () => {
                                     <td className="px-4 py-2 border">{order.city}</td>
                                     <td className="px-4 py-2 border">${order.totalAmount}</td>
                                     <td className="px-4 py-2 border">
+                                        {order.payment ? (
+                                            <span className="text-green-600 font-medium flex items-center"><Check className='me-2' size={20} /> Paid</span>
+                                        ) : (
+                                            <span className="text-red-500 font-bold">❌ Unpaid</span>
+                                        )}
+                                    </td>
+
+                                    <td className="px-4 py-2 border">
                                         <button
                                             onClick={() => openModal(order)}
                                             className="bg-blue-500 text-white text-xs px-3 py-2 rounded"
@@ -211,7 +220,7 @@ const Orders = () => {
                                         <button
                                             disabled={loadingOrderId === order._id}
                                             onClick={() => handleCompleteOrder(order._id)}
-                                            className="bg-blue-500 text-white text-xs font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline"
+                                            className="bg-green-500 text-white text-xs   py-2 px-3 rounded focus:outline-none focus:shadow-outline"
                                         >
                                             {
                                                 loadingOrderId === order._id ? <LoadingSpin /> : 'Complete'
@@ -231,33 +240,35 @@ const Orders = () => {
             </table>
 
             {/* Modal */}
-            {isModalOpen && selectedOrder && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] max-w-full">
-                        <h2 className="text-xl font-bold mb-4">Order Details</h2>
-                        <div className="overflow-y-auto max-h-[300px]">
-                            {selectedOrder.cartItems.map((item, idx) => (
-                                <div key={idx} className="flex items-center space-x-4 p-2 border rounded-lg shadow-sm bg-gray-50">
-                                    <img src={item.img} alt={item.title} className="w-10 h-10 object-cover rounded-md" />
-                                    <div className="text-left">
-                                        <p className="font-semibold">{item.title}</p>
-                                        <p className="text-sm text-gray-600">Color: {item.color}</p>
-                                        <p className="text-sm text-gray-600">Size: {item.size}</p>
-                                        <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
-                                        <p className="text-sm text-gray-600">Price: ${item.price}</p>
+            {
+                isModalOpen && selectedOrder && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                        <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] max-w-full">
+                            <h2 className="text-xl font-bold mb-4">Order Details</h2>
+                            <div className="overflow-y-auto max-h-[300px]">
+                                {selectedOrder.cartItems.map((item, idx) => (
+                                    <div key={idx} className="flex items-center space-x-4 p-2 border rounded-lg shadow-sm bg-gray-50">
+                                        <img src={item.img} alt={item.title} className="w-10 h-10 object-cover rounded-md" />
+                                        <div className="text-left">
+                                            <p className="font-semibold">{item.title}</p>
+                                            <p className="text-sm text-gray-600">Color: {item.color}</p>
+                                            <p className="text-sm text-gray-600">Size: {item.size}</p>
+                                            <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                                            <p className="text-sm text-gray-600">Price: ${item.price}</p>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
+                            <button
+                                onClick={closeModal}
+                                className="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded"
+                            >
+                                Close
+                            </button>
                         </div>
-                        <button
-                            onClick={closeModal}
-                            className="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded"
-                        >
-                            Close
-                        </button>
                     </div>
-                </div>
-            )}
+                )
+            }
 
 
             <div className="pagination flex justify-end space-x-2 p-4">
@@ -286,7 +297,7 @@ const Orders = () => {
                 </button>
             </div>
 
-        </div>
+        </div >
     );
 };
 
