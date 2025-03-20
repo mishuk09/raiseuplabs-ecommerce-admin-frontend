@@ -1,30 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router';
 import * as XLSX from 'xlsx'; // Import SheetJS
-
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate();
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 7;
 
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    navigate('/signin');
-                    return;
-                }
-
-                const response = await axios.get('http://localhost:5000/item/orders', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
+                const response = await axios.get('http://localhost:5000/item/orders')
                 setOrders(response.data);
                 setLoading(false);
             } catch (error) {
@@ -38,21 +28,11 @@ const Orders = () => {
         };
 
         fetchOrders();
-    }, [navigate]);
+    }, []);
 
     const handleCompleteOrder = async (orderId) => {
         try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error('Token not found');
-            }
-
-            await axios.delete(`http://localhost:5000/item/orders/${orderId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
+            await axios.delete(`http://localhost:5000/item/orders/${orderId}`)
             // Remove the completed order from the UI
             setOrders(orders.filter(order => order._id !== orderId));
         } catch (error) {
@@ -60,16 +40,12 @@ const Orders = () => {
         }
     };
 
-
-
-    // ✅ Function to generate Excel file
     const exportToExcel = () => {
         if (orders.length === 0) {
             alert('No orders to export!');
             return;
         }
 
-        // Format orders for Excel
         const formattedOrders = orders.map((order) => ({
             'Full Name': order.fullName,
             'Email': order.email,
@@ -80,24 +56,29 @@ const Orders = () => {
             'Total Amount ($)': order.totalAmount,
             'Items': order.cartItems.map(item =>
                 `Title: ${item.title}, Color: ${item.color}, Size: ${item.size}, Quantity: ${item.quantity}, Price: ${item.price}`
-            ).join('; ') // Join items into a single string
+            ).join('; ')
         }));
 
-        // Create a worksheet
         const ws = XLSX.utils.json_to_sheet(formattedOrders);
-
-        // Create a workbook
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Orders');
-
-        // Generate and download the Excel file
         XLSX.writeFile(wb, 'Orders_Report.xlsx');
     };
 
+
+    const openModal = (order) => {
+        setSelectedOrder(order);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedOrder(null);
+    };
+
     return (
-        <div className="  mx-auto p-4">
-            <h1 className="text-3xl   font-bold text-center mb-8">Orders Management</h1>
-            {/*  Export Button */}
+        <div className="mx-auto p-4">
+            <h1 className="text-3xl font-bold text-center mb-8">Orders Management</h1>
             <div className="text-center flex justify-end mb-4">
                 <button
                     onClick={exportToExcel}
@@ -117,37 +98,79 @@ const Orders = () => {
                     {orders.length === 0 ? (
                         <p className="text-lg h-[100vh] text-center font-semibold">No orders found.</p>
                     ) : (
-                        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
-                            {orders.map((order) => (
-                                <div key={order._id} className="border rounded p-4 bg-white shadow-md">
-                                    <h2 className="text-xl font-semibold mb-2">Order by {order.fullName}</h2>
-                                    <p><span className="font-semibold">Email:</span> {order.email}</p>
-                                    <p><span className="font-semibold">Phone:</span> {order.phoneNumber}</p>
-                                    <p><span className="font-semibold">City:</span> {order.city}</p>
-                                    <p><span className="font-semibold">Address:</span> {order.address}</p>
-                                    <p><span className="font-semibold">Order Note:</span> {order.orderNote}</p>
-                                    <p><span className="font-semibold">Total Amount:</span> ${order.totalAmount}</p>
-                                    <h3 className="font-semibold mt-2">Items:</h3>
-                                    <ul>
-                                        {order.cartItems.map((item, index) => (
-                                            <li key={index} className="border-t mt-2 pt-2">
-                                                <p><span className="font-semibold">Title:</span> {item.title}</p>
-                                                <p><span className="font-semibold">Color:</span> {item.color}</p>
-                                                <p><span className="font-semibold">Size:</span> {item.size}</p>
-                                                <p><span className="font-semibold">Quantity:</span> {item.quantity}</p>
-                                                <p><span className="font-semibold">Price:</span> ${item.price}</p>
-                                                <img src={item.img} alt={item.title} className="mt-2" width="50" />
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <button
-                                        onClick={() => handleCompleteOrder(order._id)}
-                                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4 focus:outline-none focus:shadow-outline"
-                                    >
-                                        Complete Order
-                                    </button>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full bg-white border border-gray-300">
+                                <thead>
+                                    <tr className="bg-gray-100">
+                                        <th className="px-4 py-2 border">Sr No</th>
+                                        <th className="px-4 py-2 border">Full Name</th>
+                                        <th className="px-4 py-2 border">Email</th>
+                                        <th className="px-4 py-2 border">Phone</th>
+                                        <th className="px-4 py-2 border">City</th>
+                                        <th className="px-4 py-2 border">Total Amount</th>
+                                        <th className="px-4 py-2 border">Items</th>
+                                        <th className="px-4 py-2 border">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {orders.map((order, index) => (
+                                        <tr key={order._id} className="text-center">
+                                            <td className="px-4 py-2 border">{index + 1}</td>
+                                            <td className="px-4 py-2 border">{order.fullName}</td>
+                                            <td className="px-4 py-2 border">{order.email}</td>
+                                            <td className="px-4 py-2 border">{order.phoneNumber}</td>
+                                            <td className="px-4 py-2 border">{order.city}</td>
+                                            <td className="px-4 py-2 border">${order.totalAmount}</td>
+                                            <td className="px-4 py-2 border">
+                                                <button
+                                                    onClick={() => openModal(order)}
+                                                    className="bg-blue-500 text-white text-xs px-3 py-1 rounded"
+                                                >
+                                                    View List
+                                                </button>
+                                            </td>
+
+                                            <td className="px-4 py-2 border">
+                                                <button
+                                                    onClick={() => handleCompleteOrder(order._id)}
+                                                    className="bg-blue-500 text-white text-xs font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline"
+                                                >
+                                                    Complete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+
+                            {/* Modal */}
+                            {isModalOpen && selectedOrder && (
+                                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                                    <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] max-w-full">
+                                        <h2 className="text-xl font-bold mb-4">Order Details</h2>
+                                        <div className="overflow-y-auto max-h-[300px]">
+                                            {selectedOrder.cartItems.map((item, idx) => (
+                                                <div key={idx} className="flex items-center space-x-4 p-2 border rounded-lg shadow-sm bg-gray-50">
+                                                    <img src={item.img} alt={item.title} className="w-10 h-10 object-cover rounded-md" />
+                                                    <div className="text-left">
+                                                        <p className="font-semibold">{item.title}</p>
+                                                        <p className="text-sm text-gray-600">Color: {item.color}</p>
+                                                        <p className="text-sm text-gray-600">Size: {item.size}</p>
+                                                        <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                                                        <p className="text-sm text-gray-600">Price: ${item.price}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <button
+                                            onClick={closeModal}
+                                            className="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded"
+                                        >
+                                            Close
+                                        </button>
+                                    </div>
                                 </div>
-                            ))}
+                            )}
                         </div>
                     )}
                 </>
