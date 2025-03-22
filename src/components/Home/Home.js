@@ -173,7 +173,18 @@ const Home = () => {
                         currentItems.map((product, index) => (
                             <tr key={index} className="bg-white hover:bg-gray-50 text-sm cursor-pointer transition">
                                 <td className="px-2 py-1 w-24 text-start">
-                                    <img src={product.img} alt={product.title} className="w-10 h-10 object-cover rounded border" />
+                                    {
+                                        Array.isArray(product.img) && product.img.length > 0 ? (
+                                            product.img.slice(0, 3).map((imageUrl, index) => (
+                                                <img key={index} src={imageUrl} alt={product.title} className="w-10 h-10 object-cover rounded border" />
+                                            ))
+                                        ) : (
+                                            <span>No image available</span>
+                                        )
+                                    }
+
+
+
                                 </td>
                                 <td className="px-2 py-1 w-24 text-start">{product.category}</td>
                                 <td className="px-2 py-1 w-48 text-start font-medium">{product.title}</td>

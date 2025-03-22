@@ -210,7 +210,7 @@ const Offer = () => {
                     className={`px-3 py-1 border  shadow rounded-lg ${currentPage === 1 ? 'opacity-50 cursor-not-allowed ' : 'hover:bg-blue-100'}`}
                 >
                     Prev
-                </button>
+                </button>   
                 {[...Array(totalPages)].map((_, index) => (
                     <button
                         key={index}

@@ -242,21 +242,33 @@ const Orders = () => {
             {/* Modal */}
             {
                 isModalOpen && selectedOrder && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                        <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] max-w-full">
+                    <div className="fixed  inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                        <div className="bg-white p-6 rounded-lg shadow-lg w-[500px] max-w-full">
                             <h2 className="text-xl font-bold mb-4">Order Details</h2>
-                            <div className="overflow-y-auto max-h-[300px]">
+                            <div className="overflow-y-auto max-h-[400px] ">
                                 {selectedOrder.cartItems.map((item, idx) => (
-                                    <div key={idx} className="flex items-center space-x-4 p-2 border rounded-lg shadow-sm bg-gray-50">
-                                        <img src={item.img} alt={item.title} className="w-10 h-10 object-cover rounded-md" />
-                                        <div className="text-left">
+                                    <div key={idx} className="flex items-center space-x-4 p-4 mb-4 border rounded-lg shadow-sm bg-gray-50">
+                                        {/* Product Image */}
+                                        <img src={item.img} alt={item.title} className="w-20 h-20 object-cover rounded-md" />
+
+                                        {/* Product Details */}
+                                        <div className="flex flex-col   text-left">
                                             <p className="font-semibold">{item.title}</p>
-                                            <p className="text-sm text-gray-600">Color: {item.color}</p>
-                                            <p className="text-sm text-gray-600">Size: {item.size}</p>
-                                            <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
-                                            <p className="text-sm text-gray-600">Price: ${item.price}</p>
+
+                                            {/* Color, Size, Quantity */}
+                                            <div className="flex items-center space-x-4">
+                                                <p className="text-sm text-gray-600 flex items-center">
+                                                    Color: <img src={item.color} className="w-8 h-8 object-cover rounded-md ml-2" alt="" />
+                                                </p>
+                                                <p className="text-sm text-gray-600">Size: {item.size}</p>
+                                                <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                                            </div>
+
+                                            {/* Price */}
+                                            <p className="font-medium text-gray-600">Price: ${item.price}</p>
                                         </div>
                                     </div>
+
                                 ))}
                             </div>
                             <button
