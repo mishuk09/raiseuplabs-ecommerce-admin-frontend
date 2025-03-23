@@ -6,6 +6,7 @@ import DeletePost from "../Post/DeletePost";
 import AddPost from "../Post/AddPost";
 import Spin from "../utills/Spin";
 import Items from "../utills/Items";
+import Alert from "../Alert";
 
 
 
@@ -114,7 +115,6 @@ const Home = () => {
 
             <div class="flex justify-between mt-10 mb-3">
                 <Items name='Items' />
-
                 <div class="flex  mb-2">
 
                     <div onClick={handleAddItem}
@@ -175,7 +175,7 @@ const Home = () => {
                                 <td className="px-2 py-1 w-24 text-start">
                                     {
                                         Array.isArray(product.img) && product.img.length > 0 ? (
-                                            product.img.slice(0, 3).map((imageUrl, index) => (
+                                            product.img.slice(0, 1).map((imageUrl, index) => (
                                                 <img key={index} src={imageUrl} alt={product.title} className="w-10 h-10 object-cover rounded border" />
                                             ))
                                         ) : (

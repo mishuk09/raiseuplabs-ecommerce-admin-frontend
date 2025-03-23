@@ -39,7 +39,7 @@ function App() {
         {/* Public Routes */}
         <Route path='/signin' element={<SignIn />} />
         <Route path='/signup' element={<SignUp />} />
-
+     
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
@@ -49,6 +49,7 @@ function App() {
 
             {/* Offer section routes */}
             <Route path="/offer" element={<Offfer />} />
+
             <Route path="/addoffer" element={<AddOffer />} />
             <Route path="/editoffer" element={<SelectEdit />} />
             <Route path="/offupdate/:id" element={<EditOffer />} />
