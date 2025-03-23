@@ -234,7 +234,7 @@ const AddPost = ({ onClose, onAdd }) => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="mt-4 w-full addItem-btn p-2   text-white rounded-md   flex items-center justify-center"
+                            className="mt-4 w-full addItem-btn p-2 h-10  text-white rounded-md   flex items-center justify-center"
                         >
 
                             {loading ? <LoadingSpin /> : 'Add Post'}

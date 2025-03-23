@@ -305,7 +305,7 @@ const UpdatePost = ({ id, onClose, onUpdate }) => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="mt-4 w-full addItem-btn p-2    text-white rounded-md   flex items-center justify-center"
+                            className="mt-4 h-10 w-full addItem-btn p-2    text-white rounded-md   flex items-center justify-center"
                         >
 
                             {loading ? <LoadingSpin /> : 'Update'}
