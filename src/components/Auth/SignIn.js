@@ -14,6 +14,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Alert from '@mui/material/Alert';
+import { set } from 'jodit/esm/core/helpers';
+import LoadingSpin from '../utills/LoadingSpin';
 
 const defaultTheme = createTheme();
 
@@ -24,9 +26,11 @@ export default function SignIn() {
     const [alertSeverity, setAlertSeverity] = React.useState('success');
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [loading, setLoading] = React.useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setLoading(true);
 
         if (!email || !password) {
             setShowAlert(true);
@@ -70,6 +74,8 @@ export default function SignIn() {
             setTimeout(() => {
                 setShowAlert(false);
             }, 2000);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -122,11 +128,12 @@ export default function SignIn() {
                         /> */}
                         <Button
                             type="submit"
+                            className='h-10'
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign In
+                            {loading ? <LoadingSpin /> : 'Sign In'}
                         </Button>
                         <Grid container>
                             {/* <Grid item xs>
