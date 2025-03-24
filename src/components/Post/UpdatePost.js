@@ -20,6 +20,9 @@ const UpdatePost = ({ id, onClose, onUpdate }) => {
     const [successfull, setSuccessfull] = useState(false);
     const [loading, setLoading] = useState(false);
 
+
+  
+
     useEffect(() => {
         const fetchData = async () => {
             try {

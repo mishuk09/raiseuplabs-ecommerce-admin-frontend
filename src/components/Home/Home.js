@@ -6,7 +6,6 @@ import DeletePost from "../Post/DeletePost";
 import AddPost from "../Post/AddPost";
 import Spin from "../utills/Spin";
 import Items from "../utills/Items";
-import Alert from "../Alert";
 
 
 

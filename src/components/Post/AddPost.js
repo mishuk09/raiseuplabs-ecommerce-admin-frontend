@@ -25,7 +25,6 @@ const AddPost = ({ onClose, onAdd }) => {
         setImages(files);
     };
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);

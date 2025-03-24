@@ -117,8 +117,8 @@ const Offer = () => {
 
             <div class="flex justify-between mt-10 mb-3">
 
-                <Items name='Offers'/>
-                
+                <Items name='Offers' />
+
                 <div class="flex  mb-2">
 
                     <div onClick={handleAddItem}
@@ -177,7 +177,15 @@ const Offer = () => {
                         currentItems.map((product, index) => (
                             <tr key={index} className="bg-white hover:bg-gray-50 text-sm cursor-pointer transition">
                                 <td className="px-2 py-1 w-24 text-start">
-                                    <img src={product.img} alt={product.title} className="w-10 h-10 object-cover rounded border" />
+                                    {
+                                        Array.isArray(product.img) && product.img.length > 0 ? (
+                                            product.img.slice(0, 1).map((imageUrl, index) => (
+                                                <img key={index} src={imageUrl} alt={product.title} className="w-10 h-10 object-cover rounded border" />
+                                            ))
+                                        ) : (
+                                            <span>No image available</span>
+                                        )
+                                    }
                                 </td>
                                 <td className="px-2 py-1 w-24 text-start">{product.category}</td>
                                 <td className="px-2 py-1 w-48 text-start font-medium">{product.title}</td>
@@ -210,7 +218,7 @@ const Offer = () => {
                     className={`px-3 py-1 border  shadow rounded-lg ${currentPage === 1 ? 'opacity-50 cursor-not-allowed ' : 'hover:bg-blue-100'}`}
                 >
                     Prev
-                </button>   
+                </button>
                 {[...Array(totalPages)].map((_, index) => (
                     <button
                         key={index}
